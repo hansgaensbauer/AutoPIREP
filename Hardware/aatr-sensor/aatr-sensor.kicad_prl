@@ -1,6 +1,6 @@
 {
   "board": {
-    "active_layer": 44,
+    "active_layer": 37,
     "active_layer_preset": "",
     "auto_track_width": true,
     "hidden_nets": [],
@@ -63,10 +63,10 @@
       36
     ],
     "visible_layers": "ffdffff_ffffffff",
-    "zone_display_mode": 0
+    "zone_display_mode": 1
   },
   "meta": {
-    "filename": "apr-sensor.kicad_prl",
+    "filename": "aatr-sensor.kicad_prl",
     "version": 3
   },
   "project": {
