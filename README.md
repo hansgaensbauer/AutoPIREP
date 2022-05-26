@@ -1,2 +1,2 @@
-# Auto-PiReps
-Hardware, Software, and Science for GA Automatic PiReps
+# Automatic Aerial Turbulence Reports
+Hardware, Software, and Science for GA AATR
