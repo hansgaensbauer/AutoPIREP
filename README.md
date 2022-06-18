@@ -5,6 +5,17 @@ Automatic Airborne Turbulence Reporting (AATR) is an electronic system that iden
 ## Prototype Hardware
 <img src="https://github.com/hansgaensbauer/AATR/blob/main/Documentation/aatr-sensor-v0.jpg?raw=true" width="480">
 
+## To-Do List
+- Create drivers:
+  - UART
+  - IMU
+  - uSD Card
+  - GPS
+  - Rockblock
+- Demo simple event upload
+- Data collection software/firmware
+- In flight USB power demo
+
 ## Avionics Open Questions
 - Do small aircraft have avionics? If not, what aircraft do?
 - Are angle of attack and airspeed transmitted to the ground? 
