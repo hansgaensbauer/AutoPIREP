@@ -35,6 +35,7 @@
     <option id="common2.components.memory.sd_mmc" value="Add" config="spi" content-id="Atmel.ASF" />
     <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
     <option id="sam0.utils.linker_scripts" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
@@ -513,7 +514,6 @@
       <Value>BOARD=USER_BOARD</Value>
       <Value>ARM_MATH_CM0PLUS=true</Value>
       <Value>ACCESS_MEM_TO_RAM_ENABLED=true</Value>
-      <Value>SD_MMC_ENABLE=true</Value>
       <Value>SYSTICK_MODE</Value>
       <Value>RTC_CALENDAR_ASYNC=false</Value>
       <Value>SPI_CALLBACK_MODE=true</Value>
@@ -735,6 +735,12 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\sd.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\sd.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
