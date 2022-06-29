@@ -1,5 +1,6 @@
 //#include "usart.h"
 #include "sd.h"
+#include "main.h"
 #include <asf.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -15,25 +16,25 @@ static FIL file_object;
 * Saves a datapoint to the file.
 */
 void sd_log(const char *fmt, ...){
-	volatile uint8_t lun = LUN_ID_USB;
+	volatile uint8_t lun = LUN_ID_SD_MMC_SPI_MEM;
 	memset(&fs, 0, sizeof(FATFS));
 	
 	FRESULT res = f_mount(lun, &fs); // Mount drive
 	if (FR_INVALID_DRIVE == res) {
 		//debug_print("Mount Failed!\n\r");
-		return;
+		error();
 	}
 	res = f_open(&file_object, log_file, FA_WRITE);
 	f_lseek(&file_object, file_object.fsize);  //Move to the end of the file
 	if (res == FR_NOT_READY) { // LUN not ready
 		//debug_print("File open failed!\n\r");
 		f_close(&file_object);
-		return;
+		error();
 	}
 	if (res != FR_OK) { // LUN test error
 		f_close(&file_object);
 		//debug_print("LUN Test Error!\n\r");
-		return;
+		error();
 	}
 	
 	// Print the data to the file

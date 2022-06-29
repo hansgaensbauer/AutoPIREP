@@ -11,6 +11,7 @@
 #include <asf.h>
 #include <board.h>
 #include <conf_board.h>
+#include "main.h"
 
 #if defined(__GNUC__)
 void board_init(void) WEAK __attribute__((alias("system_board_init")));
@@ -21,8 +22,5 @@ void board_init(void);
 
 void system_board_init(void)
 {
-	/* This function is meant to contain board-specific initialization code
-	 * for, e.g., the I/O pins. The initialization can rely on application-
-	 * specific board configuration, found in conf_board.h.
-	 */
+	PORT->Group[0].DIRSET.reg = LED_RED | LED_GREEN; //Set up LEDs as outputs
 }
