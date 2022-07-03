@@ -22,5 +22,5 @@ void board_init(void);
 
 void system_board_init(void)
 {
-	PORT->Group[0].DIRSET.reg = LED_RED | LED_GREEN; //Set up LEDs as outputs
+	PORT->Group[0].DIRSET.reg = LED_1 | LED_2; //Set up LEDs as outputs
 }

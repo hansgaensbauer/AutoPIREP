@@ -95,6 +95,7 @@
 #  endif
 #endif
 
+//sd_mmc_spi_init
 
 #define driver_init                     ATPASTE2(driver, _init)
 #define driver_select_device            ATPASTE2(driver, _select_device)

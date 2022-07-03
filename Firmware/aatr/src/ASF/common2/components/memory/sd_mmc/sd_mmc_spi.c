@@ -353,6 +353,9 @@ void sd_mmc_spi_init(void)
 	spi_slave_inst_get_config_defaults(&slave_configs[0]);
 	slave_configs[0].ss_pin = ss_pins[0];
 	spi_attach_slave(&sd_mmc_spi_devices[0], &slave_configs[0]);
+	
+	//DEBUG
+	//spi_write(&sd_mmc_master, 0x55);
 }
 
 void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,

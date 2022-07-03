@@ -16,7 +16,7 @@ static FIL file_object;
 * Saves a datapoint to the file.
 */
 void sd_log(const char *fmt, ...){
-	volatile uint8_t lun = LUN_ID_SD_MMC_SPI_MEM;
+	volatile uint8_t lun = LUN_ID_SD_MMC_0_MEM;
 	memset(&fs, 0, sizeof(FATFS));
 	
 	FRESULT res = f_mount(lun, &fs); // Mount drive

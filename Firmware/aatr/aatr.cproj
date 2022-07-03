@@ -33,15 +33,15 @@
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common2.components.memory.sd_mmc" value="Add" config="spi" content-id="Atmel.ASF" />
+    <option id="common2.services.delay" value="Add" config="cycle" content-id="Atmel.ASF" />
     <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
     <option id="sam0.utils.linker_scripts" value="Add" config="" content-id="Atmel.ASF" />
   </options>
   <configurations>
     <configuration key="config.common2.components.memory.sd_mmc.ctrl_access" value="enable" default="disable" content-id="Atmel.ASF" />
     <configuration key="config.sam0.drivers.sercom.spi" value="callback" default="callback" content-id="Atmel.ASF" />
-    <configuration key="config.common2.services.delay" value="systick" default="systick" content-id="Atmel.ASF" />
+    <configuration key="config.common2.services.delay" value="cycle" default="systick" content-id="Atmel.ASF" />
     <configuration key="config.common.services.fs.fatfs.codepage" value="sbcs" default="sbcs" content-id="Atmel.ASF" />
     <configuration key="config.sam0.drivers.rtc" value="calendar_polled" default="count_callback" content-id="Atmel.ASF" />
   </configurations>
@@ -311,7 +311,6 @@
     <file path="src/ASF/common2/components/memory/sd_mmc/sd_mmc_protocol.h" framework="" version="3.49.1" source="common2\components\memory\sd_mmc\sd_mmc_protocol.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common2/services/delay/sam0/systick_counter.c" framework="" version="3.49.1" source="common2\services\delay\sam0\systick_counter.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common2/services/delay/delay.h" framework="" version="3.49.1" source="common2\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/common2/services/delay/sam0/systick_counter.h" framework="" version="3.49.1" source="common2\services\delay\sam0\systick_counter.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/sam0/drivers/rtc/rtc_calendar.h" framework="" version="3.49.1" source="sam0\drivers\rtc\rtc_calendar.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/sam0/drivers/rtc/rtc_tamper.h" framework="" version="3.49.1" source="sam0\drivers\rtc\rtc_tamper.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/sam0/drivers/rtc/rtc_sam_d_r_h/rtc_calendar.c" framework="" version="3.49.1" source="sam0\drivers\rtc\rtc_sam_d_r_h\rtc_calendar.c" changed="False" content-id="Atmel.ASF" />
@@ -336,6 +335,8 @@
     <file path="src/Config/conf_fatfs.h" framework="" version="3.49.1" source="thirdparty\fatfs\fatfs-r0.09\src\module_config_sbcs\conf_fatfs.h" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common2/components/memory/sd_mmc/sd_mmc_mem.c" framework="" version="3.49.1" source="common2\components\memory\sd_mmc\sd_mmc_mem.c" changed="False" content-id="Atmel.ASF" />
     <file path="src/ASF/common2/components/memory/sd_mmc/sd_mmc_mem.h" framework="" version="3.49.1" source="common2\components\memory\sd_mmc\sd_mmc_mem.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common2/services/delay/sam0/cycle_counter.c" framework="" version="3.49.1" source="common2\services\delay\sam0\cycle_counter.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common2/services/delay/sam0/cycle_counter.h" framework="" version="3.49.1" source="common2\services\delay\sam0\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
   </files>
   <documentation help="https://asf.microchip.com/docs/3.49.1/common.applications.user_application.sam0_system.user_board.atsamd21e17d/html/index.html" />
   <offline-documentation help="" />
@@ -376,10 +377,10 @@
       <Value>NDEBUG</Value>
       <Value>BOARD=USER_BOARD</Value>
       <Value>ARM_MATH_CM0PLUS=true</Value>
-      <Value>SYSTICK_MODE</Value>
       <Value>RTC_CALENDAR_ASYNC=false</Value>
       <Value>SPI_CALLBACK_MODE=true</Value>
       <Value>SD_MMC_ENABLE</Value>
+      <Value>CYCLE_MODE</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
@@ -475,7 +476,7 @@
       <Value>../src/ASF/thirdparty/fatfs/fatfs-port-r0.09/sam0</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
-  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0PLUS=true -DBOARD=USER_BOARD -DSYSTICK_MODE -DRTC_CALENDAR_ASYNC=false -DSPI_CALLBACK_MODE=true -DSD_MMC_ENABLE</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0PLUS=true -DBOARD=USER_BOARD -DRTC_CALENDAR_ASYNC=false -DSPI_CALLBACK_MODE=true -DSD_MMC_ENABLE -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
       <Value>../src/ASF/common/boards</Value>
@@ -530,10 +531,10 @@
       <Value>BOARD=USER_BOARD</Value>
       <Value>ARM_MATH_CM0PLUS=true</Value>
       <Value>ACCESS_MEM_TO_RAM_ENABLED=true</Value>
-      <Value>SYSTICK_MODE</Value>
       <Value>RTC_CALENDAR_ASYNC=false</Value>
       <Value>SPI_CALLBACK_MODE=true</Value>
       <Value>SD_MMC_ENABLE</Value>
+      <Value>CYCLE_MODE</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
@@ -632,7 +633,7 @@
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
-  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0PLUS=true -DBOARD=USER_BOARD -DSYSTICK_MODE -DRTC_CALENDAR_ASYNC=false -DSPI_CALLBACK_MODE=true -DSD_MMC_ENABLE</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM0PLUS=true -DBOARD=USER_BOARD -DRTC_CALENDAR_ASYNC=false -DSPI_CALLBACK_MODE=true -DSD_MMC_ENABLE -DCYCLE_MODE</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
       <Value>../src/ASF/common/boards</Value>
@@ -751,6 +752,12 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ASF\common2\services\delay\sam0\cycle_counter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common2\services\delay\sam0\cycle_counter.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\main.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1442,12 +1449,6 @@
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\common2\services\delay\delay.h">
-      <SubType>compile</SubType>
-    </None>
-    <Compile Include="src\ASF\common2\services\delay\sam0\systick_counter.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="src\ASF\common2\services\delay\sam0\systick_counter.h">
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\ASF\common\services\storage\ctrl_access\ctrl_access.c">

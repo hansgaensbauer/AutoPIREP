@@ -9,8 +9,8 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-	#define LED_GREEN PORT_PA27
-	#define LED_RED PORT_PA28
+	#define LED_1 PORT_PA27
+	#define LED_2 PORT_PA28
 	
 	//Function prototypes
 	void error(void);
