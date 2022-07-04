@@ -1319,6 +1319,7 @@ static sd_mmc_err_t sd_mmc_select_slot(uint8_t slot)
 
 #if (defined SD_MMC_0_CD_GPIO)
 	//! Card Detect pins
+	/*
 	if (port_pin_get_input_level(sd_mmc_cards[slot].cd_gpio)
 			!= SD_MMC_0_CD_DETECT_VALUE) {
 		if (sd_mmc_cards[slot].state == SD_MMC_CARD_STATE_DEBOUNCE) {
@@ -1334,11 +1335,14 @@ static sd_mmc_err_t sd_mmc_select_slot(uint8_t slot)
 		SD_MMC_START_TIMEOUT();
 		return SD_MMC_ERR_NO_CARD;
 	}
-	if (sd_mmc_cards[slot].state == SD_MMC_CARD_STATE_DEBOUNCE) {
+	*/
+	if (1){ //(sd_mmc_cards[slot].state == SD_MMC_CARD_STATE_DEBOUNCE) {
+		/*
 		if (!SD_MMC_IS_TIMEOUT()) {
 			// Debounce on going
 			return SD_MMC_ERR_NO_CARD;
 		}
+		*/
 		// Card is not initialized
 		sd_mmc_cards[slot].state = SD_MMC_CARD_STATE_INIT;
 		// Set 1-bit bus width and low clock for initialization

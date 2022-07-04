@@ -14,7 +14,6 @@
 	
 	#define MAX_DRIVE _VOLUMES
 	#define LOG_FILENAME "log.txt"
-	#define MAX_PRINT_LEN 128
 	
 	//Function prototypes
 	void sd_log(const char *, ...) __attribute__ ((format (gnu_printf, 1, 2)));
