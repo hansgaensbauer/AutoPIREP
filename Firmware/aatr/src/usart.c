@@ -38,8 +38,8 @@ void usart_init(){
 	PORT->Group[0].PINCFG[5].reg &= ~PORT_PINCFG_PULLEN; //enable pulldown4
 	PORT->Group[0].PINCFG[4].reg |= PORT_PINCFG_PMUXEN; //Enable PMUX
 	PORT->Group[0].PINCFG[5].reg |= PORT_PINCFG_PMUXEN; //Enable PMUX
-	PORT->Group[0].PMUX[4>>1].bit.PMUXE = PORT_PMUX_PMUXE_D_Val; //Peripheral function C
-	PORT->Group[0].PMUX[5>>1].bit.PMUXO = PORT_PMUX_PMUXO_D_Val; //Peripheral function C
+	PORT->Group[0].PMUX[4>>1].bit.PMUXE = PORT_PMUX_PMUXE_D_Val; //Peripheral function D
+	PORT->Group[0].PMUX[5>>1].bit.PMUXO = PORT_PMUX_PMUXO_D_Val; //Peripheral function D
 	
 	//Set operating mode 	
 	//Set asynchronous communication mode
@@ -48,7 +48,7 @@ void usart_init(){
 	SERCOM0->USART.CTRLA.reg |= (
 		SERCOM_USART_CTRLA_MODE_USART_INT_CLK | 
 		SERCOM_USART_CTRLA_DORD //| 
-		//SERCOM_USART_CTRLA_RXPO(0x3) | 
+		//SERCOM_USART_CTRLA_RXPO(0x3) | //revisit this
 		//SERCOM_USART_CTRLA_TXPO(0x1)
 		);
 		
