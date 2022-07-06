@@ -47,9 +47,9 @@ void usart_init(){
 	//Set data order
 	SERCOM0->USART.CTRLA.reg |= (
 		SERCOM_USART_CTRLA_MODE_USART_INT_CLK | 
-		SERCOM_USART_CTRLA_DORD //| 
-		//SERCOM_USART_CTRLA_RXPO(0x3) | //revisit this
-		//SERCOM_USART_CTRLA_TXPO(0x1)
+		SERCOM_USART_CTRLA_DORD | 
+		SERCOM_USART_CTRLA_RXPO(0x1) |
+		SERCOM_USART_CTRLA_TXPO(0x0)
 		);
 		
 	//enable the transmitter with rxen and txen
