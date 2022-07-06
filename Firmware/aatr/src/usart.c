@@ -90,3 +90,11 @@ void debug_print(const char *fmt, ...){
 		delay_ms(10); //Eventually we should just wait
 	#endif //DEBUG PRING
 }
+
+void print_arr(uint8_t * arr, uint8_t len){
+	debug_print("[");
+	for(int i = 0; i < len-1; i++){
+		debug_print("0x%02x, ", arr[i]);
+	}
+	debug_print("0x%02x]", arr[len-1]);
+}

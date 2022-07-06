@@ -9,6 +9,11 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+	typedef enum aatr_state{
+		AATR_STATE_PASS,
+		AATR_STATE_FAIL
+	} aatr_state;
+
 	#define DEBUG_PRINT
 	#define MAX_PRINT_LEN 120
 
