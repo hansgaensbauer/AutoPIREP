@@ -755,6 +755,12 @@
     <Compile Include="src\ASF\common2\services\delay\sam0\cycle_counter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\imu.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\imu.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\usart.c">
       <SubType>compile</SubType>
     </Compile>
