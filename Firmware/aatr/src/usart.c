@@ -33,13 +33,13 @@ void usart_init(){
 	SERCOM0->USART.CTRLA.reg = ~SERCOM_USART_CTRLA_ENABLE; //disable the USART
 	
 	//Set up IO pins
-	PORT->Group[0].DIRSET.reg = PORT_PA04;
-	PORT->Group[0].DIRCLR.reg = PORT_PA05;
 	PORT->Group[0].PINCFG[5].reg &= ~PORT_PINCFG_PULLEN; //enable pulldown4
 	PORT->Group[0].PINCFG[4].reg |= PORT_PINCFG_PMUXEN; //Enable PMUX
 	PORT->Group[0].PINCFG[5].reg |= PORT_PINCFG_PMUXEN; //Enable PMUX
 	PORT->Group[0].PMUX[4>>1].bit.PMUXE = PORT_PMUX_PMUXE_D_Val; //Peripheral function D
 	PORT->Group[0].PMUX[5>>1].bit.PMUXO = PORT_PMUX_PMUXO_D_Val; //Peripheral function D
+	PORT->Group[0].DIRSET.reg = PORT_PA04;
+	PORT->Group[0].DIRCLR.reg = PORT_PA05;
 	
 	//Set operating mode 	
 	//Set asynchronous communication mode

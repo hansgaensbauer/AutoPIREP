@@ -19,7 +19,7 @@ int main (void)
 	//sd_mmc_init();
 
 	//sd_log("hello lonely world");
-	imu_spi_write(0x55, 0x10);
+	debug_print("WHO_AM_I: %x\n\r", imu_spi_read(0x0F));
 	debug_print("Hello lonely world?");
 	PORT->Group[0].OUTSET.reg = LED_1;
 }
