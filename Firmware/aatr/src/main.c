@@ -9,27 +9,23 @@
 
 int main (void)
 {
+	Ctrl_status status;
 	system_init();
 	delay_init();
 	usart_init();
 	imu_init();
 
-	//irq_initialize_vectors();
-	//cpu_irq_enable();
-	//sd_mmc_init();
-
-	//sd_log("hello lonely world");
+	irq_initialize_vectors();
+	cpu_irq_enable();
 	
-	imu_data cdata;
+	sd_mmc_init();
+	delay_ms(100);
+	do{
+		status = sd_mmc_test_unit_ready(0);
+	} while (CTRL_GOOD != status);
 	
-
+	sd_log("hello lonely world");
 	PORT->Group[0].OUTSET.reg = LED_1;
-	
-	while(true) {
-		imu_readdata(&cdata);
-		print_imu_data(cdata);
-		delay_s(1);
-	}
 }
 
 // Nonrecoverable software error handler. Flashes red LED. 
