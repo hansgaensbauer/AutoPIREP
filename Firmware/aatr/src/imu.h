@@ -89,13 +89,13 @@
 	#define IMU_FIFO_DATA_OUT_Z_H 0x7E
 	
 	typedef struct imu_data{
-		uint16_t temp;
-		uint16_t A_x;
-		uint16_t A_y;
-		uint16_t A_z;
-		uint16_t G_x;
-		uint16_t G_y;
-		uint16_t G_z;
+		int16_t temp;
+		int16_t A_x;
+		int16_t A_y;
+		int16_t A_z;
+		int16_t G_x;
+		int16_t G_y;
+		int16_t G_z;
 	} imu_data;
 	
 	//IMU data rates
@@ -156,5 +156,6 @@
 	uint8_t imu_spi_read(uint8_t);
 	aatr_state imu_readdata(imu_data * );
 	void clear_rxc(void);
+	void print_imu_data(imu_data);
 
 #endif /* IMU_H_ */

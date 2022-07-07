@@ -22,8 +22,14 @@ int main (void)
 	
 	imu_data cdata;
 	
-	imu_readdata(&cdata);
+
 	PORT->Group[0].OUTSET.reg = LED_1;
+	
+	while(true) {
+		imu_readdata(&cdata);
+		print_imu_data(cdata);
+		delay_s(1);
+	}
 }
 
 // Nonrecoverable software error handler. Flashes red LED. 

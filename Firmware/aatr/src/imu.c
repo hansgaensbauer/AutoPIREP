@@ -24,7 +24,7 @@ aatr_state imu_init(){
 	//Set accelerometer data rate and full scale
 	uint8_t ctrl1_value = (
 		IMU_XL_DR(IMU_DR_104_HZ) |
-		IMU_XL_FS(IMU_XL_FS_4_G)
+		IMU_XL_FS(IMU_XL_FS_2_G)
 	);
 	imu_spi_write(IMU_CTRL1_XL, ctrl1_value);
 	
@@ -39,38 +39,32 @@ aatr_state imu_init(){
 }
 
 aatr_state imu_readdata(imu_data * databuf){
-	debug_print("Reading IMU Data:\n\r");
-	debug_print("Temp: 0x%02x", imu_spi_read(IMU_OUT_TEMP_L));
-	
 	uint8_t rx_buf[14];
 	
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
 	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
 	delay_us(8);
 	
-	SERCOM2->SPI.DATA.reg = IMU_OUT_TEMP_L | 0x80; //Start with temp
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
-	rx_buf[0] = SERCOM2->SPI.DATA.reg; //Clear by reading
-	SERCOM2->SPI.DATA.reg = 0x00; //Start sending zeroes
-	
-	while(!SERCOM2->SPI.INTFLAG.bit.RXC);	//Wait for received data
-	rx_buf[0] = SERCOM2->SPI.DATA.reg;
-	rx_buf[0] = SERCOM2->SPI.DATA.reg;
-	
-	for(int i = 1; i < 14; i++){
-		
+	SERCOM2->SPI.DATA.reg = IMU_OUT_TEMP_L | 0x80;
+	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+	clear_rxc();
+	for(int i = 0; i < 14; i++){
 		SERCOM2->SPI.DATA.reg = 0x00;
-		while(!SERCOM2->SPI.INTFLAG.bit.RXC);	//Wait for received data
+		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
 		rx_buf[i] = SERCOM2->SPI.DATA.reg;
-		rx_buf[i] = SERCOM2->SPI.DATA.reg;
-		while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
-
 	}
-	while(!SERCOM2->SPI.INTFLAG.bit.TXC); //wait for transaction to finish
 	delay_us(8);
 	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
 	
-	print_arr(rx_buf, 14);
+	//print_arr(rx_buf, 14); //DEBUG
+	
+	//Populate the databuf struct
+	databuf->temp = rx_buf[0] | (rx_buf[1] << 8);
+	databuf->G_x = rx_buf[2] | (rx_buf[3] << 8);
+	databuf->G_y = rx_buf[4] | (rx_buf[5] << 8);
+	databuf->G_z = rx_buf[6] | (rx_buf[7] << 8);
+	databuf->A_x = rx_buf[8] | (rx_buf[9] << 8);
+	databuf->A_y = rx_buf[10] | (rx_buf[11] << 8);
+	databuf->A_z = rx_buf[12] | (rx_buf[13] << 8);
 	
 	return AATR_STATE_PASS;
 }
@@ -98,9 +92,9 @@ void imu_spi_init(){
 	PORT->Group[0].PMUX[10>>1].bit.PMUXE = PORT_PMUX_PMUXE_D_Val; //Peripheral function D
 	PORT->Group[0].PMUX[11>>1].bit.PMUXO = PORT_PMUX_PMUXO_D_Val; //Peripheral function D
 	
+	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
 	PORT->Group[0].DIRSET.reg = PORT_PA10 | PORT_PA09 | PORT_PA11; //DO, NCS & SCK
 	PORT->Group[0].DIRCLR.reg = PORT_PA08;
-	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
 	
 	//Set operating mode
 	//Set PAD[0] = DI
@@ -123,38 +117,19 @@ void imu_spi_init(){
 }
 
 void imu_spi_write(uint8_t address, uint8_t data){
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
 	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
 	delay_us(8);
 	SERCOM2->SPI.DATA.reg = address;
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
+	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+	clear_rxc();
 	SERCOM2->SPI.DATA.reg = data;
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
+	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+	clear_rxc();
 	delay_us(8);
 	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
 }
 
 uint8_t imu_spi_read(uint8_t address){
-	/*
-	clear_rxc();
-	clear_rxc();
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);//Wait for data ready
-	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
-	delay_us(8);
-	
-	SERCOM2->SPI.DATA.reg = address | 0x80;
-	while(!SERCOM2->SPI.INTFLAG.bit.DRE);	//Wait for data ready
-	clear_rxc();
-	SERCOM2->SPI.DATA.reg = 0x00;
-	while(!SERCOM2->SPI.INTFLAG.bit.RXC);	//Wait for received data from first byte
-	clear_rxc();
-	while(!SERCOM2->SPI.INTFLAG.bit.RXC | !SERCOM2->SPI.INTFLAG.bit.TXC);	//Wait for received data from second byte
-	clear_rxc();
-	delay_us(8);
-	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
-	
-	return SERCOM2->SPI.DATA.reg;
-	*/
 	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
 	delay_us(8);
 	SERCOM2->SPI.DATA.reg = address | 0x80;
@@ -162,12 +137,20 @@ uint8_t imu_spi_read(uint8_t address){
 	clear_rxc();
 	SERCOM2->SPI.DATA.reg = 0x00;
 	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-	return SERCOM2->SPI.DATA.reg;
 	delay_us(8);
 	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
-	
+	return SERCOM2->SPI.DATA.reg;
 }
 
+/* helper function for imu_spi_read */
 void clear_rxc(void){
   asm volatile ("" : : "r" (*(unsigned int *)0x42001028)); //Force a read of the DATA register
+}
+
+/* Pretty prints IMU data */
+void print_imu_data(imu_data databuf){
+	debug_print("IMU Data:\n\r");
+	debug_print("\tTemp: %d\n\r", databuf.temp);
+	debug_print("\tAx: %5d\tAy: %5d\tAz: %5d\n\r", databuf.A_x, databuf.A_y, databuf.A_z);
+	debug_print("\tGx: %5d\tGy: %5d\tGz: %5d\n\n\r", databuf.G_x, databuf.G_y, databuf.G_z);
 }

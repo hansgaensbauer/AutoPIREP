@@ -1,7 +1,7 @@
 #ifndef USART_H_
 #define USART_H_
 	
-	#define BAUDRATE 9600
+	#define BAUDRATE 115200
 
 	//Function declarations
 	void usart_init(void);
