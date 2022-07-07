@@ -24,7 +24,7 @@ aatr_state imu_init(){
 	//Set accelerometer data rate and full scale
 	uint8_t ctrl1_value = (
 		IMU_XL_DR(IMU_DR_104_HZ) |
-		IMU_XL_FS(IMU_XL_FS_2_G)
+		IMU_XL_FS(IMU_XL_FS_4_G)
 	);
 	imu_spi_write(IMU_CTRL1_XL, ctrl1_value);
 	

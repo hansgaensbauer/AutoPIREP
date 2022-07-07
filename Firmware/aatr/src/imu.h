@@ -121,10 +121,10 @@
 	
 	//Accelerometer range
 	typedef enum imu_xl_fs {
-		IMU_XL_FS_2_G,
-		IMU_XL_FS_16_G,
 		IMU_XL_FS_4_G,
-		IMU_XL_FS_8_G
+		IMU_XL_FS_32_G,
+		IMU_XL_FS_8_G,
+		IMU_XL_FS_16_G
 	} imu_xl_fs;
 	
 	#define IMU_XL_FS_POS 2
