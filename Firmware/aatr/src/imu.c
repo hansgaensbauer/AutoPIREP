@@ -15,26 +15,50 @@ aatr_state imu_init(){
 	debug_print("Initializing IMU\n\r");
 	imu_spi_init();
 	
+	PORT->Group[0].DIRCLR.reg = IMU_INT1 | IMU_INT2; //interrupts high Z
+	
 	//Check that it's the right chip
 	if(imu_spi_read(IMU_WHO_AM_I) != IMU_WHO_AM_I_Val){
 		debug_print("IMU Unresponsive.\n\r");
 		return AATR_STATE_FAIL;
 	}
 	
+	imu_spi_write(IMU_CTRL3_C, IMU_SW_RESET);
+	
 	//Set accelerometer data rate and full scale
 	uint8_t ctrl1_value = (
-		IMU_XL_DR(IMU_DR_104_HZ) |
+		IMU_XL_ODR(IMU_DR_6660_HZ) |
 		IMU_XL_FS(IMU_XL_FS_4_G)
 	);
 	imu_spi_write(IMU_CTRL1_XL, ctrl1_value);
 	
 	//Set gyroscope data rate and full scale
 	uint8_t ctrl2_value = (
-		IMU_GYRO_DR(IMU_DR_104_HZ) |
+		IMU_GYRO_ODR(IMU_DR_6660_HZ) |
 		IMU_GYRO_FS(IMU_GYRO_FS_2000_DPS)
 	);
 	imu_spi_write(IMU_CTRL2_G, ctrl2_value);
 
+	return AATR_STATE_PASS;
+}
+
+aatr_state imu_datalog_init(){
+	
+	imu_init(); //Initialize the IMU first
+	
+	//Configure the FIFO for continuous mode
+	//Write WTM[8:0]
+	//imu_spi_write(IMU_FIFO_CTRL1, IMU_FIFO_HALF_FULL & 0xFF);
+	//imu_spi_write(IMU_FIFO_CTRL2, IMU_FIFO_HALF_FULL >> 8);
+	
+	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_CONTINUOUS); //Set FIFO to continuous  mode
+	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_FULL); //Configure interrupt 1 pin
+	
+	//Write gyro and xl to fifo at this rate
+	imu_spi_write(IMU_FIFO_CTRL3, IMU_XL_BDR(IMU_DR_6660_HZ) | IMU_GYRO_BDR(IMU_DR_6660_HZ));
+	
+	//imu_spi_write(IMU_CTRL3_C, IMU_SW_RESET); //Software reset
+	
 	return AATR_STATE_PASS;
 }
 

@@ -12,6 +12,8 @@
 	#include "main.h"
 	
 	#define IMU_NCS PORT_PA09 //Chip select
+	#define IMU_INT1 PORT_PA00 //INT1
+	#define IMU_INT2 PORT_PA01 //INT2
 	#define IMU_WHO_AM_I_Val 0x6C
 	
 	//Register definitions
@@ -88,6 +90,9 @@
 	#define IMU_FIFO_DATA_OUT_Z_L 0x7D
 	#define IMU_FIFO_DATA_OUT_Z_H 0x7E
 	
+	#define IMU_FIFO_HALF_FULL 428 //3kByte/7 bytes/write, rounded down
+	#define IMU_SW_RESET 1
+	
 	typedef struct imu_data{
 		int16_t temp;
 		int16_t A_x;
@@ -112,12 +117,54 @@
 		IMU_DR_3330_HZ,
 		IMU_DR_6660_HZ
 	} imu_datarate;
-	
+		
 	#define IMU_XL_ODR_POS 4
-	#define IMU_XL_DR(val) (val << IMU_XL_ODR_POS)
+	#define IMU_XL_ODR(val) (val << IMU_XL_ODR_POS)
 	
 	#define IMU_GYRO_ODR_POS 4
-	#define IMU_GYRO_DR(val) (val << IMU_GYRO_ODR_POS)
+	#define IMU_GYRO_ODR(val) (val << IMU_GYRO_ODR_POS)
+	
+	#define IMU_XL_BDR_POS 0
+	#define IMU_XL_BDR(val) (val << IMU_XL_BDR_POS)
+	
+	#define IMU_GYRO_BDR_POS 4
+	#define IMU_GYRO_BDR(val) (val << IMU_GYRO_BDR_POS)
+	
+	//IMU FIFO Modes
+	typedef enum imu_fifo_mode{
+		IMU_FIFO_MODE_BYPASS = 0b000,
+		IMU_FIFO_MODE_FIFO = 0b001,
+		IMU_FIFO_MODE_CONTINUOUS_TO_FIFO = 0b011,
+		IMU_FIFO_MODE_BYPASS_TO_CONTINUOUS = 0b100,
+		IMU_FIFO_MODE_CONTINUOUS = 0b110,
+		IMY_FIFO_MODE_BYPASS_TO_FIFO = 0b111
+	} imu_fifo_mode;
+	
+	typedef enum fifo_timestamp_batching{
+		IMU_FIFO_TS_NOT_BATCHED,
+		IMU_FIFO_TS_BATCH_DIV1, 
+		IMU_FIFO_TS_BATCH_DIV8,
+		IMU_FIFO_TS_BATCH_DIV32
+	} fifo_timestamp_batching;
+	
+	typedef enum fifo_temp_batching{
+		IMU_FIFO_TEMP_NOT_BATCHED,
+		IMU_FIFO_TEMP_BATCH_1_6Hz,
+		IMU_FIFO_TEMP_BATCH_12_5Hz,
+		IMU_FIFO_TEMP_BATCH_52Hz
+	} fifo_temp_batching;
+		
+	typedef enum imu_int_ctrl{
+		IMU_DEN_DRDY		= 0b10000000,
+		IMU_CNT_BDR			= 0b01000000,
+		IMU_FIFO_FULL		= 0b00100000,
+		IMU_FIFO_OVR		= 0b00010000,
+		IMU_FIFO_TH			= 0b00001000,
+		IMU_BOOT			= 0b00000100,
+		IMU_DRDY_TEMP		= 0b00000100,
+		IMU_DRDY_G			= 0b00000010,
+		IMU_DRDY_XL			= 0b00000001
+	} imu_int_ctrl;
 	
 	//Accelerometer range
 	typedef enum imu_xl_fs {
@@ -157,5 +204,6 @@
 	aatr_state imu_readdata(imu_data * );
 	void clear_rxc(void);
 	void print_imu_data(imu_data);
+	aatr_state imu_datalog_init(void);
 
 #endif /* IMU_H_ */

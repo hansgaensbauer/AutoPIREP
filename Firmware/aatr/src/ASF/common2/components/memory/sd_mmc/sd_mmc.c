@@ -1317,7 +1317,7 @@ static sd_mmc_err_t sd_mmc_select_slot(uint8_t slot)
 	}
 	Assert(sd_mmc_nb_block_remaining == 0);
 
-#if (0)//(defined SD_MMC_0_CD_GPIO)
+#if (0) //(defined SD_MMC_0_CD_GPIO) //THERE IS NO CD
 	//! Card Detect pins
 	
 	if (port_pin_get_input_level(sd_mmc_cards[slot].cd_gpio)

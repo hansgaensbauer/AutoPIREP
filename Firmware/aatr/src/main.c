@@ -13,8 +13,10 @@ int main (void)
 	system_init();
 	delay_init();
 	usart_init();
-	imu_init();
+	
+	imu_datalog_init();
 
+/*
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	
@@ -26,6 +28,7 @@ int main (void)
 	
 	sd_log("hello lonely world");
 	PORT->Group[0].OUTSET.reg = LED_1;
+	*/
 }
 
 // Nonrecoverable software error handler. Flashes red LED. 

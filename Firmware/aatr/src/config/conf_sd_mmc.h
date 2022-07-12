@@ -72,7 +72,7 @@
 
 #  define SD_MMC_CS                  PIN_PA18
 
-#  define SD_MMC_0_CD_GPIO           PIN_PA01
+#  define SD_MMC_0_CD_GPIO           PIN_PA01 //THIS IS A LIE, THERE IS NO CD
 #  define SD_MMC_0_CD_DETECT_VALUE   1
 #endif
 
