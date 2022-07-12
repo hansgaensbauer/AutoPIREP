@@ -43,13 +43,7 @@ aatr_state imu_init(){
 }
 
 aatr_state imu_datalog_init(){
-	
 	imu_init(); //Initialize the IMU first
-	
-	//Configure the FIFO for continuous mode
-	//Write WTM[8:0]
-	//imu_spi_write(IMU_FIFO_CTRL1, IMU_FIFO_HALF_FULL & 0xFF);
-	//imu_spi_write(IMU_FIFO_CTRL2, IMU_FIFO_HALF_FULL >> 8);
 	
 	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_CONTINUOUS); //Set FIFO to continuous  mode
 	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_FULL); //Configure interrupt 1 pin
@@ -57,21 +51,50 @@ aatr_state imu_datalog_init(){
 	//Write gyro and xl to fifo at this rate
 	imu_spi_write(IMU_FIFO_CTRL3, IMU_XL_BDR(IMU_DR_6660_HZ) | IMU_GYRO_BDR(IMU_DR_6660_HZ));
 	
-	//imu_spi_write(IMU_CTRL3_C, IMU_SW_RESET); //Software reset
-	
 	return AATR_STATE_PASS;
 }
 
+/*
+	Reads the FIFO as fast as possible into dataarr
+*/
+aatr_state empty_fifo(imu_data * dataarr){
+		uint8_t rx_buf[7];
+		
+		PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
+		delay_us(8);
+		
+		//Start the process: request the first line
+		SERCOM2->SPI.DATA.reg = IMU_FIFO_DATA_OUT_TAG | 0x80;
+		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+		clear_rxc();
+		
+		for(int i = 0; i < 6; i++){
+			SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG + i) | 0x80; //Increment address
+			while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+			rx_buf[i] = SERCOM2->SPI.DATA.reg;
+		}
+		
+		//Last byte is just 0s
+		SERCOM2->SPI.DATA.reg = 00;
+		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+		rx_buf[6] = SERCOM2->SPI.DATA.reg;
+		
+		delay_us(8);
+		PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
+		
+		return AATR_STATE_PASS;
+}
+
 aatr_state imu_readdata(imu_data * databuf){
-	uint8_t rx_buf[14];
+	uint8_t rx_buf[12];
 	
 	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
 	delay_us(8);
 	
-	SERCOM2->SPI.DATA.reg = IMU_OUT_TEMP_L | 0x80;
+	SERCOM2->SPI.DATA.reg = IMU_OUTX_L_G | 0x80;
 	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
 	clear_rxc();
-	for(int i = 0; i < 14; i++){
+	for(int i = 0; i < 12; i++){
 		SERCOM2->SPI.DATA.reg = 0x00;
 		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
 		rx_buf[i] = SERCOM2->SPI.DATA.reg;
@@ -82,13 +105,12 @@ aatr_state imu_readdata(imu_data * databuf){
 	//print_arr(rx_buf, 14); //DEBUG
 	
 	//Populate the databuf struct
-	databuf->temp = rx_buf[0] | (rx_buf[1] << 8);
-	databuf->G_x = rx_buf[2] | (rx_buf[3] << 8);
-	databuf->G_y = rx_buf[4] | (rx_buf[5] << 8);
-	databuf->G_z = rx_buf[6] | (rx_buf[7] << 8);
-	databuf->A_x = rx_buf[8] | (rx_buf[9] << 8);
-	databuf->A_y = rx_buf[10] | (rx_buf[11] << 8);
-	databuf->A_z = rx_buf[12] | (rx_buf[13] << 8);
+	databuf->G_x = rx_buf[0] | (rx_buf[1] << 8);
+	databuf->G_y = rx_buf[2] | (rx_buf[3] << 8);
+	databuf->G_z = rx_buf[4] | (rx_buf[5] << 8);
+	databuf->A_x = rx_buf[6] | (rx_buf[7] << 8);
+	databuf->A_y = rx_buf[8] | (rx_buf[9] << 8);
+	databuf->A_z = rx_buf[10] | (rx_buf[11] << 8);
 	
 	return AATR_STATE_PASS;
 }
@@ -174,7 +196,6 @@ void clear_rxc(void){
 /* Pretty prints IMU data */
 void print_imu_data(imu_data databuf){
 	debug_print("IMU Data:\n\r");
-	debug_print("\tTemp: %d\n\r", databuf.temp);
 	debug_print("\tAx: %5d\tAy: %5d\tAz: %5d\n\r", databuf.A_x, databuf.A_y, databuf.A_z);
 	debug_print("\tGx: %5d\tGy: %5d\tGz: %5d\n\n\r", databuf.G_x, databuf.G_y, databuf.G_z);
 }

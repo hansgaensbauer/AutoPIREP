@@ -15,6 +15,7 @@
 	#define IMU_INT1 PORT_PA00 //INT1
 	#define IMU_INT2 PORT_PA01 //INT2
 	#define IMU_WHO_AM_I_Val 0x6C
+	#define IMU_FIFO_SIZE 428 //CHECK THIS
 	
 	//Register definitions
 	#define IMU_FUNC_CFG_ACCESS 0x01
@@ -90,11 +91,9 @@
 	#define IMU_FIFO_DATA_OUT_Z_L 0x7D
 	#define IMU_FIFO_DATA_OUT_Z_H 0x7E
 	
-	#define IMU_FIFO_HALF_FULL 428 //3kByte/7 bytes/write, rounded down
 	#define IMU_SW_RESET 1
 	
 	typedef struct imu_data{
-		int16_t temp;
 		int16_t A_x;
 		int16_t A_y;
 		int16_t A_z;
@@ -205,5 +204,6 @@
 	void clear_rxc(void);
 	void print_imu_data(imu_data);
 	aatr_state imu_datalog_init(void);
+	aatr_state empty_fifo(imu_data *);
 
 #endif /* IMU_H_ */

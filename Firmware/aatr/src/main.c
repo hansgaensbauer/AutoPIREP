@@ -14,7 +14,11 @@ int main (void)
 	delay_init();
 	usart_init();
 	
+	imu_data dataframe[1];
+	
 	imu_datalog_init();
+	while(~PORT->Group[0].IN.reg & IMU_INT1); //Wait on IMU_INT1
+	empty_fifo(dataframe);
 
 /*
 	irq_initialize_vectors();
