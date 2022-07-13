@@ -59,7 +59,7 @@ void usart_init(){
 		SERCOM_USART_CTRLB_CHSIZE(0) //8 data bits
 		);
 	
-	uint64_t baudRate = (uint64_t)65536 * (F_CPU - 16 * BAUDRATE) / F_CPU;
+	uint64_t baudRate = (uint64_t)65536 * (F_CPU - 16 * USART_BAUDRATE) / F_CPU;
 	SERCOM0->USART.BAUD.reg = (uint32_t)baudRate; //write baud register
 	
 	//Enable the USART

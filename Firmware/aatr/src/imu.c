@@ -15,8 +15,10 @@ aatr_state imu_init(){
 	debug_print("Initializing IMU\n\r");
 	imu_spi_init();
 	
-	PORT->Group[0].DIRCLR.reg = IMU_INT1 | IMU_INT2; //interrupts high Z
-	
+	PORT->Group[0].DIRCLR.reg = (IMU_INT1 | IMU_INT2); //interrupts high Z
+	PORT->Group[0].PINCFG[0].reg = PORT_PINCFG_INEN;  //Enable input buffers
+	PORT->Group[0].PINCFG[1].reg = PORT_PINCFG_INEN;
+		
 	//Check that it's the right chip
 	if(imu_spi_read(IMU_WHO_AM_I) != IMU_WHO_AM_I_Val){
 		debug_print("IMU Unresponsive.\n\r");
@@ -45,45 +47,50 @@ aatr_state imu_init(){
 aatr_state imu_datalog_init(){
 	imu_init(); //Initialize the IMU first
 	
-	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_CONTINUOUS); //Set FIFO to continuous  mode
-	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_FULL); //Configure interrupt 1 pin
-	
 	//Write gyro and xl to fifo at this rate
 	imu_spi_write(IMU_FIFO_CTRL3, IMU_XL_BDR(IMU_DR_6660_HZ) | IMU_GYRO_BDR(IMU_DR_6660_HZ));
+	imu_spi_write(IMU_FIFO_CTRL2, 0);
+	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_BYPASS); //Clear the FIFO
+	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_FIFO); //Set FIFO to continuous  mode
+	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_FULL); //Configure interrupt 1 pin
 	
 	return AATR_STATE_PASS;
 }
 
 /*
-	Reads the FIFO as fast as possible into dataarr
+	Reads the FIFO as fast as possible
 */
-aatr_state empty_fifo(imu_data * dataarr){
-		uint8_t rx_buf[7];
-		
+aatr_state empty_fifo(uint8_t * dataframe){
 		PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
 		delay_us(8);
+		SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG) | 0x80; //Increment address
 		
-		//Start the process: request the first line
-		SERCOM2->SPI.DATA.reg = IMU_FIFO_DATA_OUT_TAG | 0x80;
-		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-		clear_rxc();
-		
-		for(int i = 0; i < 6; i++){
-			SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG + i) | 0x80; //Increment address
+		for(int i = 0; i < IMU_FIFO_SIZE * IMU_FIFO_BYTES_PER_FRAME; i++){
+			while(!SERCOM2->SPI.INTFLAG.bit.DRE);
+			
+			SERCOM2->SPI.DATA.reg = 0x00; /*
+				(IMU_FIFO_DATA_OUT_TAG + (1 + i) % 
+				IMU_FIFO_BYTES_PER_FRAME) | 0x80; //Increment address*/
+				
 			while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-			rx_buf[i] = SERCOM2->SPI.DATA.reg;
+			dataframe[i] = SERCOM2->SPI.DATA.reg;
 		}
 		
-		//Last byte is just 0s
+		//Last byte is just 0s  
+		while(!SERCOM2->SPI.INTFLAG.bit.DRE);
 		SERCOM2->SPI.DATA.reg = 00;
+		
 		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-		rx_buf[6] = SERCOM2->SPI.DATA.reg;
+		dataframe[6] = SERCOM2->SPI.DATA.reg;
+		
+		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+		dataframe[7] = SERCOM2->SPI.DATA.reg;
 		
 		delay_us(8);
 		PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
 		
 		return AATR_STATE_PASS;
-}
+  }
 
 aatr_state imu_readdata(imu_data * databuf){
 	uint8_t rx_buf[12];
@@ -122,9 +129,9 @@ void imu_spi_init(){
 	
 	//Set up Generic Clock Generator 0 for SPI
 	GCLK->CLKCTRL.reg = (
-	GCLK_CLKCTRL_ID(SERCOM2_GCLK_ID_CORE) |
-	GCLK_CLKCTRL_CLKEN |
-	GCLK_CLKCTRL_GEN(0)
+		GCLK_CLKCTRL_ID(SERCOM2_GCLK_ID_CORE) |
+		GCLK_CLKCTRL_CLKEN |
+		GCLK_CLKCTRL_GEN(0)
 	);
 	
 	SERCOM2->USART.CTRLA.reg = ~SERCOM_SPI_CTRLA_ENABLE; //disable the SPI
@@ -154,9 +161,8 @@ void imu_spi_init(){
 	
 	//Receive enable
 	SERCOM2->SPI.CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
-	
-	uint64_t baudRate = (uint64_t)65536 * (F_CPU - 16 * BAUDRATE) / F_CPU;
-	SERCOM2->SPI.BAUD.reg = (uint32_t)baudRate; //write baud register
+
+	SERCOM2->SPI.BAUD.reg = 0; //write baud register to super fast (4MHz)
 	
 	//Enable the SPI
 	SERCOM2->SPI.CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
@@ -198,4 +204,60 @@ void print_imu_data(imu_data databuf){
 	debug_print("IMU Data:\n\r");
 	debug_print("\tAx: %5d\tAy: %5d\tAz: %5d\n\r", databuf.A_x, databuf.A_y, databuf.A_z);
 	debug_print("\tGx: %5d\tGy: %5d\tGz: %5d\n\n\r", databuf.G_x, databuf.G_y, databuf.G_z);
+}
+
+/* 
+ * Parses and dumps IMU data. First byte must be a zero. 
+ *
+ * This function is VERY BIG and VERY SLOW
+*/
+void dump_imu_data(uint8_t dataframe[], uint16_t numlines){
+	
+	const char *tagnames[26] = {
+		"Invalid",
+		"Gyroscope NC",
+		"Accelerometer NC",
+		"Temperature",
+		"Timestamp",
+		"CFG_Change",
+		"Accelerometer NC_T_2",
+		"Accelerometer NC_T_1",
+		"Accelerometer 2xC",
+		"Accelerometer 3xC",
+		"Gyroscope NC_T_2",
+		"Gyroscope NC_T_1",
+		"Gyroscope 2xC",
+		"Gyroscope 3xC",
+		"Sensor Hub Slave 0",
+		"Sensor Hub Slave 1",
+		"Sensor Hub Slave 2",
+		"Sensor Hub Slave 3",
+		"Step Counter",
+		"Invalid",
+		"Invalid",
+		"Invalid",
+		"Invalid",
+		"Invalid",
+		"Invalid",
+		"Sensor Hub Nack"
+	};
+	
+	debug_print("\n\rDumping IMU Data from FIFO:\n\r");
+  	for(int i = 0; 
+		i < numlines * IMU_FIFO_BYTES_PER_FRAME; 
+		i = i + IMU_FIFO_BYTES_PER_FRAME){
+			
+		debug_print("\t");		
+		debug_print("X: 0x%02x%02x\tY: 0x%02x%02x\tZ: 0x%02x%02x", 
+			dataframe[i+2],
+			dataframe[i+1],
+			dataframe[i+4],
+			dataframe[i+3],
+			dataframe[i+6],
+			dataframe[i+5]
+		);
+		debug_print("\tTag:");
+		debug_print(tagnames[dataframe[i] >> 3]);
+		debug_print("\n\r");
+	}
 }

@@ -11,11 +11,14 @@
 
 	#include "main.h"
 	
+	#define IMU_SPI_BAUDRATE 2000000UL
+	
 	#define IMU_NCS PORT_PA09 //Chip select
 	#define IMU_INT1 PORT_PA00 //INT1
 	#define IMU_INT2 PORT_PA01 //INT2
 	#define IMU_WHO_AM_I_Val 0x6C
-	#define IMU_FIFO_SIZE 428 //CHECK THIS
+	#define IMU_FIFO_SIZE 512 //512 words of 7 bytes each
+	#define IMU_FIFO_BYTES_PER_FRAME 7
 	
 	//Register definitions
 	#define IMU_FUNC_CFG_ACCESS 0x01
@@ -194,6 +197,28 @@
 		LSM6DS_HPF_ODR_DIV_9 = 2,
 		LSM6DS_HPF_ODR_DIV_400 = 3,
 	} _imu_hpf_range;
+	
+	typedef enum imu_fifo_tag {
+		IMU_GYRO_NC,
+		IMU_XL_NC,
+		IMU_TEMP,
+		IMU_TS,
+		IMU_CFG_CHANGE,
+		IMU_XL_NC_T_2,
+		IMU_XL_NC_T_1,
+		IMU_XL_2xC,
+		IMU_XL_3xC,
+		IMU_GYRO_NC_T_2,
+		IMU_GYRO_NC_T_1,
+		IMU_GYRO_2xC,
+		IMU_GYRO_3xC,
+		IMU_SH0,
+		IMU_SH1,
+		IMU_SH2,
+		IMU_SH3,
+		IMU_STEP_COUNT,
+		IMU_SH_NACK
+	} imu_fifo_tag;
 
 	//function prototypes
 	aatr_state imu_init(void);
@@ -204,6 +229,7 @@
 	void clear_rxc(void);
 	void print_imu_data(imu_data);
 	aatr_state imu_datalog_init(void);
-	aatr_state empty_fifo(imu_data *);
+	aatr_state empty_fifo(uint8_t *);
+	void dump_imu_data(uint8_t *, uint16_t);
 
 #endif /* IMU_H_ */
