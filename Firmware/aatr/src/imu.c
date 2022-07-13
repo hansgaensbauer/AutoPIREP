@@ -65,23 +65,12 @@ aatr_state empty_fifo(uint8_t * dataframe){
 		delay_us(8);
 		SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG) | 0x80; //Increment address
 		
-		for(int i = 0; i < IMU_FIFO_SIZE * IMU_FIFO_BYTES_PER_FRAME; i++){
+		for(int i = 0; i < IMU_FIFO_SIZE * IMU_FIFO_BYTES_PER_FRAME + 1; i++){
 			while(!SERCOM2->SPI.INTFLAG.bit.DRE);
-			
-			SERCOM2->SPI.DATA.reg = 0x00; /*
-				(IMU_FIFO_DATA_OUT_TAG + (1 + i) % 
-				IMU_FIFO_BYTES_PER_FRAME) | 0x80; //Increment address*/
-				
+			SERCOM2->SPI.DATA.reg = 0x00;
 			while(!SERCOM2->SPI.INTFLAG.bit.RXC);
 			dataframe[i] = SERCOM2->SPI.DATA.reg;
 		}
-		
-		//Last byte is just 0s  
-		while(!SERCOM2->SPI.INTFLAG.bit.DRE);
-		SERCOM2->SPI.DATA.reg = 00;
-		
-		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-		dataframe[6] = SERCOM2->SPI.DATA.reg;
 		
 		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
 		dataframe[7] = SERCOM2->SPI.DATA.reg;
