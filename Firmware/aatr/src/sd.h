@@ -14,9 +14,11 @@
 	
 	#define MAX_DRIVE _VOLUMES
 	#define LOG_FILENAME "log.txt"
+	#define DATA_FILENAME "data.ned"
 	
 	//Function prototypes
 	void sd_log(const char *, ...) __attribute__ ((format (gnu_printf, 1, 2)));
+	void sd_write_bytes(uint8_t *, uint16_t);
 
 
 

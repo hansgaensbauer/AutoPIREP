@@ -17,7 +17,7 @@
 	#define IMU_INT1 PORT_PA00 //INT1
 	#define IMU_INT2 PORT_PA01 //INT2
 	#define IMU_WHO_AM_I_Val 0x6C
-	#define IMU_FIFO_SIZE 512 //512 words of 7 bytes each
+	#define IMU_FIFO_SIZE 256 //512 words of 7 bytes each
 	#define IMU_FIFO_BYTES_PER_FRAME 7
 	
 	//Register definitions
