@@ -80,7 +80,7 @@
 #define SD_MMC_SPI_SOURCE_CLOCK    GCLK_GENERATOR_0
 
 /* Define the SPI max clock */
-#define SD_MMC_SPI_MAX_CLOCK       4000000
+#define SD_MMC_SPI_MAX_CLOCK       8000000
 
 #endif /* CONF_SD_MMC_H_INCLUDED */
 

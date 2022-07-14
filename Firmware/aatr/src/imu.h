@@ -11,13 +11,13 @@
 
 	#include "main.h"
 	
-	#define IMU_SPI_BAUDRATE 2000000UL
-	
 	#define IMU_NCS PORT_PA09 //Chip select
 	#define IMU_INT1 PORT_PA00 //INT1
 	#define IMU_INT2 PORT_PA01 //INT2
 	#define IMU_WHO_AM_I_Val 0x6C
 	#define IMU_FIFO_SIZE 256 //512 words of 7 bytes each
+	#define IMU_TARGET_READ_SIZE 256
+	#define IMU_READ_SIZE_BUFFER 20
 	#define IMU_FIFO_BYTES_PER_FRAME 7
 	
 	//Register definitions
@@ -219,6 +219,9 @@
 		IMU_STEP_COUNT,
 		IMU_SH_NACK
 	} imu_fifo_tag;
+	
+	#define IMU_FIFO_STOP_ON_WTM 0b10000000
+	#define IMU_FIFO_WTM8 0b00000001
 
 	//function prototypes
 	aatr_state imu_init(void);
@@ -229,7 +232,7 @@
 	void clear_rxc(void);
 	void print_imu_data(imu_data);
 	aatr_state imu_datalog_init(void);
-	aatr_state empty_fifo(uint8_t *);
+	uint16_t empty_fifo(uint8_t *);
 	void dump_imu_data(uint8_t *, uint16_t);
 
 #endif /* IMU_H_ */

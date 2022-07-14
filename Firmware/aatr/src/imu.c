@@ -36,7 +36,7 @@ aatr_state imu_init(){
 	
 	//Set gyroscope data rate and full scale
 	uint8_t ctrl2_value = (
-		IMU_GYRO_ODR(IMU_DR_6660_HZ) |
+		IMU_GYRO_ODR(IMU_DR_416_HZ) |
 		IMU_GYRO_FS(IMU_GYRO_FS_2000_DPS)
 	);
 	imu_spi_write(IMU_CTRL2_G, ctrl2_value);
@@ -48,11 +48,15 @@ aatr_state imu_datalog_init(){
 	imu_init(); //Initialize the IMU first
 	
 	//Write gyro and xl to fifo at this rate
-	imu_spi_write(IMU_FIFO_CTRL3, IMU_XL_BDR(IMU_DR_6660_HZ) | IMU_GYRO_BDR(IMU_DR_6660_HZ));
-	imu_spi_write(IMU_FIFO_CTRL2, 0);
+	imu_spi_write(IMU_FIFO_CTRL3, IMU_XL_BDR(IMU_DR_6660_HZ) | IMU_GYRO_BDR(IMU_DR_416_HZ));
+	
+	//Fire interrupt at 256 entries
+	imu_spi_write(IMU_FIFO_CTRL1, IMU_TARGET_READ_SIZE & 0xFF);
+	imu_spi_write(IMU_FIFO_CTRL2, IMU_TARGET_READ_SIZE > 7); 
+	
 	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_BYPASS); //Clear the FIFO
-	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_FIFO); //Set FIFO to continuous  mode
-	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_FULL); //Configure interrupt 1 pin
+	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_CONTINUOUS); //Set FIFO to continuous  mode
+	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_TH); //Configure interrupt 1 pin
 	
 	return AATR_STATE_PASS;
 }
@@ -60,25 +64,29 @@ aatr_state imu_datalog_init(){
 /*
 	Reads the FIFO as fast as possible
 */
-aatr_state empty_fifo(uint8_t * dataframe){
-		PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
-		delay_us(8);
-		SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG) | 0x80; //Increment address
+uint16_t empty_fifo(uint8_t * dataframe){
+		//Find out how many bytes there are
+	uint16_t numbytes = ( imu_spi_read(IMU_FIFO_STATUS2) | 
+						((imu_spi_read(IMU_FIFO_STATUS2) & 0x3) << 8));
+	
+	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low
+	delay_us(8);
+	SERCOM2->SPI.DATA.reg = (IMU_FIFO_DATA_OUT_TAG) | 0x80; //Increment address
 		
-		for(int i = 0; i < IMU_FIFO_SIZE * IMU_FIFO_BYTES_PER_FRAME + 1; i++){
-			while(!SERCOM2->SPI.INTFLAG.bit.DRE);
-			SERCOM2->SPI.DATA.reg = 0x00;
-			while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-			dataframe[i] = SERCOM2->SPI.DATA.reg;
-		}
-		
+	for(int i = 0; i < numbytes * IMU_FIFO_BYTES_PER_FRAME + 1; i++){
+		while(!SERCOM2->SPI.INTFLAG.bit.DRE);
+		SERCOM2->SPI.DATA.reg = 0x00;
 		while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-		dataframe[7] = SERCOM2->SPI.DATA.reg;
+		dataframe[i] = SERCOM2->SPI.DATA.reg;
+	}
 		
-		delay_us(8);
-		PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
+	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
+	dataframe[7] = SERCOM2->SPI.DATA.reg;
 		
-		return AATR_STATE_PASS;
+	delay_us(8);
+	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
+		
+	return numbytes;
   }
 
 aatr_state imu_readdata(imu_data * databuf){
@@ -151,7 +159,7 @@ void imu_spi_init(){
 	//Receive enable
 	SERCOM2->SPI.CTRLB.reg = SERCOM_SPI_CTRLB_RXEN;
 
-	SERCOM2->SPI.BAUD.reg = 0; //write baud register to super fast (4MHz)
+	SERCOM2->SPI.BAUD.reg = 2; //write baud register to super fast (4MHz)
 	
 	//Enable the SPI
 	SERCOM2->SPI.CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;

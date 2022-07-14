@@ -2499,7 +2499,7 @@ FRESULT f_write (
 	if (res != FR_OK) LEAVE_FF(fp->fs, res);
 	if (fp->flag & FA__ERROR)				/* Aborted file? */
 		LEAVE_FF(fp->fs, FR_INT_ERR);
-	if (!(fp->flag & FA_WRITE))				/* Check access mode */
+	if (!(fp->flag & FA_WRITE))				/* Check    access mode */
 		LEAVE_FF(fp->fs, FR_DENIED);
 	if ((DWORD)(fp->fsize + btw) < fp->fsize) btw = 0;	/* File size cannot reach 4GB */
 
