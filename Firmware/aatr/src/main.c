@@ -33,12 +33,21 @@ int main (void)
 	uint16_t framesize;
 	
 	imu_datalog_init();
+	
+	/* Data read unit test */
+	while(!(PORT->Group[0].IN.reg & IMU_INT1)); //Wait on IMU_INT1
+	framesize = empty_fifo(dataframe);
+	dump_imu_data(&dataframe[1], framesize);
+	
+	/*
 	while(true){
 		while(!(PORT->Group[0].IN.reg & IMU_INT1)); //Wait on IMU_INT1
 		framesize = empty_fifo(dataframe);
 			
-		sd_write_bytes(dataframe, framesize);
+		sd_write_bytes(&dataframe[1], framesize);
 	}
+	
+	*/
 }
 
 // Nonrecoverable software error handler. Flashes red LED. 

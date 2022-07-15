@@ -40,6 +40,8 @@ aatr_state imu_init(){
 		IMU_GYRO_FS(IMU_GYRO_FS_2000_DPS)
 	);
 	imu_spi_write(IMU_CTRL2_G, ctrl2_value);
+	
+	delay_ms(5); //throw out first ~30 samples
 
 	return AATR_STATE_PASS;
 }
@@ -54,9 +56,10 @@ aatr_state imu_datalog_init(){
 	imu_spi_write(IMU_FIFO_CTRL1, IMU_TARGET_READ_SIZE & 0xFF);
 	imu_spi_write(IMU_FIFO_CTRL2, IMU_TARGET_READ_SIZE > 7); 
 	
+	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_TH); //Configure interrupt 1 pin
+	
 	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_BYPASS); //Clear the FIFO
 	imu_spi_write(IMU_FIFO_CTRL4, IMU_FIFO_MODE_CONTINUOUS); //Set FIFO to continuous  mode
-	imu_spi_write(IMU_INT1_CTRL, IMU_FIFO_TH); //Configure interrupt 1 pin
 	
 	return AATR_STATE_PASS;
 }
@@ -81,7 +84,7 @@ uint16_t empty_fifo(uint8_t * dataframe){
 	}
 		
 	while(!SERCOM2->SPI.INTFLAG.bit.RXC);
-	dataframe[7] = SERCOM2->SPI.DATA.reg;
+	dataframe[numbytes * IMU_FIFO_BYTES_PER_FRAME + 1] = SERCOM2->SPI.DATA.reg;
 		
 	delay_us(8);
 	PORT->Group[0].OUTSET.reg = IMU_NCS; // Drive NCS high
