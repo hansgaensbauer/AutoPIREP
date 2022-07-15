@@ -27,17 +27,14 @@ void sd_log(const char *fmt, ...){
 		error();
 	}
 	res = f_open(&file_object, log_file, FA_WRITE);
-	f_lseek(&file_object, file_object.fsize);  //Move to the end of the file
-	if (res == FR_NOT_READY) { // LUN not ready
+	
+	if (res != FR_OK) { // LUN not ready
 		//debug_print("File open failed!\n\r");
 		f_close(&file_object);
+		f_mount(lun, NULL); //unmount the device
 		error();
 	}
-	if (res != FR_OK) { // LUN test error
-		f_close(&file_object);
-		//debug_print("LUN Test Error!\n\r");
-		error();
-	}
+	f_lseek(&file_object, file_object.fsize);  //Move to the end of the file
 	
 	// Print the data to the file
 	va_list argptr;
@@ -61,25 +58,41 @@ void sd_write_bytes(uint8_t * data, uint16_t numbytes){
 		error();
 	}
 	res = f_open(&file_object, data_file, FA_WRITE);
-	f_lseek(&file_object, file_object.fsize);  //Move to the end of the file
-	if (res == FR_NOT_READY) { // LUN not ready
+	if (res != FR_OK) { // LUN not ready
 		//debug_print("File open failed!\n\r");
 		f_close(&file_object);
+		f_mount(lun, NULL); //unmount the device
 		error();
 	}
-	if (res != FR_OK) { // LUN test error
-		f_close(&file_object);
-		//debug_print("LUN Test Error!\n\r");
-		error();
-	}
-	
-	//Dump 7 Zeros as an offset
-	uint8_t zbuff[IMU_FIFO_BYTES_PER_FRAME] = {0,0,0,0,0,0,0};
-	f_write(&file_object, zbuff, IMU_FIFO_BYTES_PER_FRAME, NULL);
+	f_lseek(&file_object, file_object.fsize);  //Move to the end of the file
 	
 	//Dump the data to the file
 	f_write(&file_object, data, numbytes, NULL);
 	
 	f_close(&file_object);
 	f_mount(lun, NULL); //unmount the device
+}
+
+int sd_find_data_endpoint(){
+	volatile uint8_t lun = LUN_ID_SD_MMC_0_MEM;
+	memset(&fs, 0, sizeof(FATFS));
+	
+	FRESULT res = f_mount(lun, &fs); // Mount drive
+	if (FR_INVALID_DRIVE == res) {
+		//debug_print("Mount Failed!\n\r");
+		error();
+	}
+	res = f_open(&file_object, data_file, FA_WRITE);
+	
+	if (res != FR_OK) { // LUN not ready
+		//debug_print("File open failed!\n\r");
+		f_close(&file_object);
+		f_mount(lun, NULL); //unmount the device
+		error();
+	}
+	
+	uint32_t size = file_object.fsize;
+	f_close(&file_object);
+	f_mount(lun, NULL); //unmount the device
+	return (int) size;
 }

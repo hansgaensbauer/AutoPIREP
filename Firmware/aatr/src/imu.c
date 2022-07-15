@@ -69,7 +69,7 @@ aatr_state imu_datalog_init(){
 */
 uint16_t empty_fifo(uint8_t * dataframe){
 		//Find out how many bytes there are
-	uint16_t numbytes = ( imu_spi_read(IMU_FIFO_STATUS2) | 
+	uint16_t numbytes = ( imu_spi_read(IMU_FIFO_STATUS1) | 
 						((imu_spi_read(IMU_FIFO_STATUS2) & 0x3) << 8));
 	
 	PORT->Group[0].OUTCLR.reg = IMU_NCS; // Drive NCS low

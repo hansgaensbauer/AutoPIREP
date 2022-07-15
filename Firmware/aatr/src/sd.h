@@ -19,7 +19,6 @@
 	//Function prototypes
 	void sd_log(const char *, ...) __attribute__ ((format (gnu_printf, 1, 2)));
 	void sd_write_bytes(uint8_t *, uint16_t);
-
-
+	int sd_find_data_endpoint(void);
 
 #endif /* SD_H_ */
