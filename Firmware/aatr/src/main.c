@@ -51,9 +51,12 @@ int main (void)
 	
 	//Datalogger main loop
 	while(true){
-		while(!(PORT->Group[0].IN.reg & IMU_INT1)); //Wait on IMU_INT1
-		framesize = empty_fifo(dataframe);
-		sd_write_bytes(&dataframe[1], framesize * IMU_FIFO_BYTES_PER_FRAME);
+		for(int l = 0; l < 40; l++){
+			while(!(PORT->Group[0].IN.reg & IMU_INT1)); //Wait on IMU_INT1
+			framesize = empty_fifo(dataframe);
+			sd_write_bytes(&dataframe[1], framesize * IMU_FIFO_BYTES_PER_FRAME);
+		}
+		PORT->Group[0].OUTTGL.reg = LED_1;
 	}
 	
 }
