@@ -2,8 +2,10 @@
 const map = L.map('map').setView([41.886398, -87.636688], 10); // Initial view set to a default location
 
 // Set up the OSM layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+var wmsLayer = L.tileLayer.wms('https://geoint.nrlssc.navy.mil/nrltileserver/wms/?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=FAASectionals&TILED=true&WIDTH=512&HEIGHT=512&SRS=EPSG%3A4326&STYLES=&BBOX=-112.5%2C22.5%2C-90%2C45', {
+    layers: 'FAASectionals',
+    format: 'image/png',
+    attribution: '&copy; <a href="https://geoint.nrlssc.navy.mil/#/">NRL</a>'
 }).addTo(map);
 
 // Define the custom icon
