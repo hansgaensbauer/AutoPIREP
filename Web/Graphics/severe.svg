@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 26.458333 26.458334"
+   version="1.1"
+   id="svg1086"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="severe.svg"
+   inkscape:export-filename="C:\Users\hansg\Documents\GQC\AATR\Web\Graphics\severe.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1088"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="3.5055164"
+     inkscape:cx="-22.393277"
+     inkscape:cy="4.9921318"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1083" />
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+       d="m 13.228301,3.210209 c -0.909611,2.19e-4 -1.750113,0.4853536 -2.205288,1.272886 l -8.6273394,14.94288 c -0.980833,1.698182 0.244203,3.821382 2.205288,3.822149 H 21.855641 c 1.961861,5.77e-4 3.188254,-2.123296 2.207034,-3.822149 L 15.435335,4.483095 C 14.979847,3.6950226 14.138536,3.2098049 13.228301,3.210209 Z"
+       id="path1783"
+       sodipodi:nodetypes="cccccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Symbol">
+    <g
+       id="g2207"
+       transform="translate(0.11088717)">
+      <path
+         id="path2604"
+         style="fill:none;stroke:#e81b00;stroke-width:1.68949;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         inkscape:transform-center-y="-1.3740442"
+         d="m 20.61828,19.545582 h -2.064846 v 0 L 13.11828,11.301208 7.6831243,19.545582 H 5.618279"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         id="path2604-3"
+         style="fill:none;stroke:#e81b00;stroke-width:1.01368;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+         inkscape:transform-center-y="-0.82441985"
+         d="m 16.408897,13.202638 v 0 L 13.147833,8.2560549 9.8867654,13.202638"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+</svg>

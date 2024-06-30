@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>OSM with Custom Icons, Popups, and Table</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="stylesheet.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPIREP</title>
+  <link rel="icon" href="Graphics/severe.png" type="image/gif" sizes="16x16">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="stylesheet.css" />
+
 </head>
 <body>
+  <div id="container">
     <div id="map"></div>
-    <h2>Live Data</h2>
-    <table id="pointsTable">
-        <thead>
-            <tr>
-                <th>Timestamp</th>
-                <th>Altitude</th>
-                <th>Severity</th>
-                <th>Airframe</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <div id="side-panel">
+        <h2>Reports</h2>
+        <table id="pointsTable">
+            <tbody>
+            </tbody>
+        </table>  
+    </div>
+    
+    <button id="toggle-button">Toggle Table</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src='latlon-geohash.js'></script>
+  <script src='script.js'></script>
+  
 </body>
 </html>
