@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map with Image Icon Markers and Tooltips</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+        }
+        .custom-tooltip {
+            z-index: 200 !important; /* Set lower z-index for tooltips */
+            pointer-events: none; /* Ensure tooltips don't interfere with mouse events */
+        }
+        .leaflet-marker-pane {
+            z-index: 900 !important; /* Set higher z-index for markers */
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Add a tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add a rectangle with a permanent tooltip
+        var rectBounds = [[51.49, -0.08], [51.5, -0.06]];
+        var rectangle = L.rectangle(rectBounds, {color: "#ff7800", weight: 1}).addTo(map);
+        rectangle.bindTooltip("I am a rectangle", {
+            permanent: true,
+            className: 'custom-tooltip',
+            direction: 'top'
+        }).openTooltip();
+
+        // Function to create image icon markers
+        function createImageIconMarker(latlng, iconUrl) {
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: iconUrl,
+                    iconSize: [32, 32], // Adjust size as needed
+                    iconAnchor: [16, 16] // Center the icon anchor
+                })
+            });
+        }
+
+        // Add image icon markers
+        var marker1 = createImageIconMarker([51.505, -0.09], 'https://leafletjs.com/examples/custom-icons/leaf-green.png').addTo(map);
+        var marker2 = createImageIconMarker([51.505, -0.08], 'https://leafletjs.com/examples/custom-icons/leaf-red.png').addTo(map);
+        var marker3 = createImageIconMarker([51.505, -0.10], 'https://leafletjs.com/examples/custom-icons/leaf-orange.png').addTo(map);
+    </script>
+</body>
+</html>
