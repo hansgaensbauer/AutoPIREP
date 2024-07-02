@@ -91,43 +91,43 @@ tac_new_york = L.rectangle([[40, -77], [44, -69]], {color: tacline_color, weight
 tac_washington = L.rectangle([[36, -79], [40, -72]], {color: tacline_color, weight: tacline_weight, fill: false}), //Guess
 tac_charlotte = L.rectangle([[32, -82], [36, -75]], {color: tacline_color, weight: tacline_weight, fill: false}); //Guess
 
-tac_klamath_falls.bindTooltip("KLAMATH FALLS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_seattle.bindTooltip("SEATTLE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_san_francisco.bindTooltip("SAN FRANCISCO", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_los_angeles.bindTooltip("LOS ANGELES", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_great_falls.bindTooltip("GREAT FALLS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_salt_lake_city.bindTooltip("SALT LAKE CITY", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_las_vegas.bindTooltip("LAS VEGAS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_phoenix.bindTooltip("PHOENIX", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_billings.bindTooltip("BILLINGS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_cheyenne.bindTooltip("CHEYENNE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_denver.bindTooltip("DENVER", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_albuquerque.bindTooltip("ALBUQUERQUE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_el_paso.bindTooltip("EL PASO", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_twin_cities.bindTooltip("TWIN CITIES", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_omaha.bindTooltip("OMAHA", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_wichita.bindTooltip("WICHITA", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_dallas_ft_worth.bindTooltip("DALLAS-FT WORTH", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_san_antonio.bindTooltip("SAN ANTONIO", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_brownsville.bindTooltip("BROWNSVILLE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_green_bay.bindTooltip("GREEN BAY", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_chicago.bindTooltip("CHICAGO", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_kansas_city.bindTooltip("KANSAS CITY", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_st_louis.bindTooltip("ST LOUIS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_memphis.bindTooltip("MEMPHIS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_houston.bindTooltip("HOUSTON", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_new_orleans.bindTooltip("NEW ORLEANS", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_lake_huron.bindTooltip("LAKE HURON", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_detroit.bindTooltip("DETROIT", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_cincinnati.bindTooltip("CINCINNATI", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_atlanta.bindTooltip("ATLANTA", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_jacksonville.bindTooltip("JACKSONVILLE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_miami.bindTooltip("MIAMI", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_halifax.bindTooltip("HALIFAX", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_montreal.bindTooltip("MONTREAL", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_new_york.bindTooltip("NEW YORK", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_washington.bindTooltip("WASHINGTON", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
-tac_charlotte.bindTooltip("CHARLOTTE", {permanent: true, direction: "center", className: 'tacregion'}).openTooltip();
+tac_klamath_falls.bindTooltip("KLAMATH FALLS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_seattle.bindTooltip("SEATTLE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_san_francisco.bindTooltip("SAN FRANCISCO", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_los_angeles.bindTooltip("LOS ANGELES", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_great_falls.bindTooltip("GREAT FALLS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_salt_lake_city.bindTooltip("SALT LAKE CITY", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_las_vegas.bindTooltip("LAS VEGAS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_phoenix.bindTooltip("PHOENIX", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_billings.bindTooltip("BILLINGS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_cheyenne.bindTooltip("CHEYENNE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_denver.bindTooltip("DENVER", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_albuquerque.bindTooltip("ALBUQUERQUE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_el_paso.bindTooltip("EL PASO", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_twin_cities.bindTooltip("TWIN CITIES", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_omaha.bindTooltip("OMAHA", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_wichita.bindTooltip("WICHITA", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_dallas_ft_worth.bindTooltip("DALLAS-FT WORTH", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_san_antonio.bindTooltip("SAN ANTONIO", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_brownsville.bindTooltip("BROWNSVILLE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_green_bay.bindTooltip("GREEN BAY", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_chicago.bindTooltip("CHICAGO", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_kansas_city.bindTooltip("KANSAS CITY", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_st_louis.bindTooltip("ST LOUIS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_memphis.bindTooltip("MEMPHIS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_houston.bindTooltip("HOUSTON", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_new_orleans.bindTooltip("NEW ORLEANS", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_lake_huron.bindTooltip("LAKE HURON", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_detroit.bindTooltip("DETROIT", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_cincinnati.bindTooltip("CINCINNATI", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_atlanta.bindTooltip("ATLANTA", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_jacksonville.bindTooltip("JACKSONVILLE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_miami.bindTooltip("MIAMI", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_halifax.bindTooltip("HALIFAX", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_montreal.bindTooltip("MONTREAL", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_new_york.bindTooltip("NEW YORK", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_washington.bindTooltip("WASHINGTON", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
+tac_charlotte.bindTooltip("CHARLOTTE", {permanent: true, direction: "center", className: 'tacregion', interactive: true}).openTooltip();
 
 var taclines = L.layerGroup([
     tac_klamath_falls, 
@@ -169,6 +169,22 @@ var taclines = L.layerGroup([
     tac_charlotte,
 ]);
 
+taclines.eachLayer(function(layer){
+    if (layer instanceof L.Rectangle) {
+        layer.on('tooltipopen', function(e) {
+            var tooltipElement = e.tooltip.getElement();
+            if (tooltipElement) {
+                tooltipElement.style.cursor = 'pointer';
+                tooltipElement.onclick = function() {
+                    map.fitBounds(layer.getBounds());
+                    setSmallSymbols(false);
+                    lastzoomLevel = map.getZoom();
+                };
+            }
+        });
+    }
+});
+
 var reports = L.layerGroup();
 
 var map = L.map('map', {
@@ -200,6 +216,21 @@ map.on('zoomend', function () {
         }
     }
     if(zoomLevel == 5 && lastzoomLevel == 6){
+        setSmallSymbols(true);
+    }
+    if(zoomLevel == 6 && lastzoomLevel == 5){
+        setSmallSymbols(false);
+    }
+    lastzoomLevel = zoomLevel;
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    queryEvents("d", 0, 6000);
+    var layerControl = L.control.layers(null, overlayMaps).addTo(map);
+});
+
+function setSmallSymbols(small){
+    if(small){
         reports.eachLayer(function(layer){
             switch(layer.severity){
                 case "1": 
@@ -215,8 +246,7 @@ map.on('zoomend', function () {
                     console.log("default");
             }
         });
-    }
-    if(zoomLevel == 6 && lastzoomLevel == 5){
+    } else {
         reports.eachLayer(function(layer){
             switch(layer.severity){
                 case "1": 
@@ -233,16 +263,10 @@ map.on('zoomend', function () {
             }
         });
     }
-    lastzoomLevel = zoomLevel;
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    queryEvents("d", 0, 6000);
-    var layerControl = L.control.layers(null, overlayMaps).addTo(map);
-});
+}
 
 function queryEvents(geohash, startTime, endTime) {
-//request for d,9,c,and f
+    //request for d,9,c,and f to cover continental US
     const url = "https://zohmomjv73.execute-api.us-east-1.amazonaws.com/prod/turbulence"
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
@@ -305,15 +329,15 @@ function addPointsToMap() {
         switch(point.severity.N){
             case "1": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker'}); 
-                marker.bindPopup("UA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "3": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker'}); 
-                marker.bindPopup("UA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "5": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_severe_small, className: 'report_marker'}); 
-                marker.bindPopup("UUA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UUA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             default:
                 console.log("default");
@@ -346,3 +370,5 @@ toggleButton.addEventListener('click', function() {
     });
     lastzoomLevel = 5
     });
+
+  
