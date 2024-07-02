@@ -1,4 +1,48 @@
+//Global for storing points
+var points = [];
 
+//Symbols
+const pirep_light = L.icon({
+    iconUrl: 'Graphics/light.png',
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
+    popupAnchor: [0, -20]
+});
+
+const pirep_moderate = L.icon({
+    iconUrl: 'Graphics/moderate.png',
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
+    popupAnchor: [0, -20]
+});
+
+const pirep_severe = L.icon({
+    iconUrl: 'Graphics/severe.png',
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
+    popupAnchor: [0, -20]
+});
+
+const pirep_light_small = L.icon({
+    iconUrl: 'Graphics/light_small.png',
+    iconSize: [10, 10],
+    iconAnchor: [5, 5],
+    popupAnchor: [0, -10]
+});
+
+const pirep_moderate_small = L.icon({
+    iconUrl: 'Graphics/moderate_small.png',
+    iconSize: [10, 10],
+    iconAnchor: [5, 5],
+    popupAnchor: [0, -10]
+});
+
+const pirep_severe_small = L.icon({
+    iconUrl: 'Graphics/severe_small.png',
+    iconSize: [10, 10],
+    iconAnchor: [5, 5],
+    popupAnchor: [0, -10]
+});
 
 var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -138,8 +182,13 @@ var overlayMaps = {
     "TAC": taclines
 };
 
+var lastzoomLevel = 5
+
 map.on('zoomend', function () {
     var zoomLevel = map.getZoom();
+    console.log(zoomLevel);
+    console.log(lastzoomLevel);
+    console.log("\n");
     var elements = document.getElementsByClassName('leaflet-tooltip');
     for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
@@ -149,95 +198,151 @@ map.on('zoomend', function () {
         }else{
             element.style.visibility = "hidden";
         }
-        
     }
+    if(zoomLevel == 5 && lastzoomLevel == 6){
+        reports.eachLayer(function(layer){
+            switch(layer.severity){
+                case "1": 
+                    layer.setIcon(pirep_light_small);
+                    break;
+                case "3": 
+                    layer.setIcon(pirep_moderate_small);
+                    break;
+                case "5": 
+                    layer.setIcon(pirep_severe_small);
+                    break;
+                default:
+                    console.log("default");
+            }
+        });
+    }
+    if(zoomLevel == 6 && lastzoomLevel == 5){
+        reports.eachLayer(function(layer){
+            switch(layer.severity){
+                case "1": 
+                    layer.setIcon(pirep_light);
+                    break;
+                case "3": 
+                    layer.setIcon(pirep_moderate);
+                    break;
+                case "5": 
+                    layer.setIcon(pirep_severe);
+                    break;
+                default:
+                    console.log("default");
+            }
+        });
+    }
+    lastzoomLevel = zoomLevel;
 });
-
-
-
-var points = [];
 
 document.addEventListener("DOMContentLoaded", function() {
     queryEvents("d", 0, 6000);
     var layerControl = L.control.layers(null, overlayMaps).addTo(map);
 });
 
-const pirep_light = L.icon({
-    iconUrl: 'Graphics/light.png',
-    iconSize: [35, 35],
-    iconAnchor: [22, 38],
-    popupAnchor: [-5, -40]
-});
-
-const pirep_moderate = L.icon({
-    iconUrl: 'Graphics/moderate.png',
-    iconSize: [35, 35],
-    iconAnchor: [22, 38],
-    popupAnchor: [-5, -40]
-});
-
-const pirep_severe = L.icon({
-    iconUrl: 'Graphics/severe.png',
-    iconSize: [35, 35],
-    iconAnchor: [22, 38],
-    popupAnchor: [-5, -40]
-});
-
-
-
-async function queryEvents(geohash, startTime, endTime) {
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://zohmomjv73.execute-api.us-east-1.amazonaws.com/prod/turbulence");
+function queryEvents(geohash, startTime, endTime) {
+//request for d,9,c,and f
+    const url = "https://zohmomjv73.execute-api.us-east-1.amazonaws.com/prod/turbulence"
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, false);
     xhr.setRequestHeader("Content-Type", "application/json");
-    const body = JSON.stringify({
-        "geohash": geohash,
+    const body_json = {
+        "geohash": "",
         "start_timestamp": startTime,
         "end_timestamp": endTime
-    });
-    xhr.onload = () => {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        points = JSON.parse(xhr.response)["Items"];
-        addPointsToMap();
-      } else {
-        console.log(`Error: ${xhr.status}`);
-      }
-    };
+    }
+    var body = JSON.stringify(body_json);
+
+    body_json.geohash = "d";
+    var body = JSON.stringify(body_json);
     xhr.send(body);
+    console.log(body);
+    var response = JSON.parse(xhr.response);
+    if(response.Count > 0){
+        points = points.concat(response["Items"]);
+    }
+
+    body_json.geohash = "9";
+    body = JSON.stringify(body_json);
+    xhr.open("POST", url, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(body);
+    response = JSON.parse(xhr.response);
+    if(response.Count > 0){
+        points = points.concat(response["Items"]);
+    }
+
+    body_json.geohash = "c";
+    body = JSON.stringify(body_json);
+    xhr.open("POST", url, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(body);
+    response = JSON.parse(xhr.response);
+    if(response.Count > 0){
+        points = points.concat(response["Items"]);
+    }
+
+    body_json.geohash = "f";
+    body = JSON.stringify(body_json);
+    xhr.open("POST", url, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(body);
+    response = JSON.parse(xhr.response);
+    if(response.Count > 0){
+        points = points.concat(response["Items"]);
+    }
+
+    addPointsToMap(); 
+
 }
 
-
-
-// Function to add points to the map using the custom icon
 function addPointsToMap() {
-    // const tableBody = document.getElementById('pointsTable').getElementsByTagName('tbody')[0];
     points.forEach(point => {
-
-        // Add the point to the table
-        // const row = tableBody.insertRow();
-        // const cell = row.insertCell(0);
         
-        var marker = L.marker([point.latitude.N, point.longitude.N], { icon: pirep_severe });
-        // console.log(point.severity.N)
+        var latlng = Geohash.decode(point.geohash.S);
+        var marker = L.marker([latlng.lat, latlng.lon], { icon: pirep_severe });
         switch(point.severity.N){
             case "1": 
-                marker = L.marker([point.latitude.N, point.longitude.N], {icon: pirep_light, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker'}); 
                 marker.bindPopup("UA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "3": 
-                marker = L.marker([point.latitude.N, point.longitude.N], {icon: pirep_moderate, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker'}); 
                 marker.bindPopup("UA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "5": 
-                marker = L.marker([point.latitude.N, point.longitude.N], {icon: pirep_severe, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_severe_small, className: 'report_marker'}); 
                 marker.bindPopup("UUA /TM " + point.timestamp.N + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             default:
                 console.log("default");
         }
-
-        // marker.bindPopup(cell.textContent);
+        marker.severity = point.severity.N;
         marker.addTo(reports);
-        // reports.addTo(map);
     });
 }
+
+//Show all functionality
+var toggleButton = document.getElementById('show-all-button');
+toggleButton.addEventListener('click', function() {
+    map.removeLayer(taclines);
+    reports.addTo(map);
+    map.flyTo([37, -95], 5);
+    reports.eachLayer(function(layer){
+        switch(layer.severity){
+            case "1": 
+                layer.setIcon(pirep_light_small);
+                break;
+            case "3": 
+                layer.setIcon(pirep_moderate_small);
+                break;
+            case "5": 
+                layer.setIcon(pirep_severe_small);
+                break;
+            default:
+                console.log("default");
+        }
+    });
+    lastzoomLevel = 5
+    });

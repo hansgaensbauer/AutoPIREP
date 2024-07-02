@@ -23,3 +23,20 @@ body, html {
 .leaflet-marker-pane {
   z-index: 700;
 }
+
+#show-all-button {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 1500;
+  padding: 10px;
+  background-color: white;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border: 1px solid #c8c8c6;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+#show-all-button:hover{
+  background-color:#f4f4f4;
+}
