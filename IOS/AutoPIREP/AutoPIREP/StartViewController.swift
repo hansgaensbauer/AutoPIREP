@@ -8,6 +8,7 @@
 import UIKit
 import CoreMotion
 import CoreLocation
+import CommonCrypto //Used for hashing uuid
 
 class StartViewController: UIViewController, CLLocationManagerDelegate{
     let locationManager = CLLocationManager()
@@ -16,14 +17,20 @@ class StartViewController: UIViewController, CLLocationManagerDelegate{
     @IBOutlet weak var aircraft_button: UIButton!
     @IBOutlet weak var aircraftlabel: UILabel!
     
-    struct PIREP {
+    struct PIREP: Codable {
+        var report_id: UInt64 = 0
+        var aircraft = ""
         var severity = 0
         var timestamp = 0
         var geohash = ""
         var altitude = 0
     }
-
-    var pireps: [PIREP] = [];
+    
+    struct PIREP_SET: Codable {
+        var items: [PIREP] = [PIREP]()
+    }
+    
+    var pireps = PIREP_SET()
     
     //Thresholds
     let THRESHOLD_LIGHT = 0.5
@@ -79,7 +86,7 @@ class StartViewController: UIViewController, CLLocationManagerDelegate{
                     self.updatePIREP(severity: 1)
                 }
                 
-                if let lasttimestamp = self.pireps.last?.timestamp{
+                if let lasttimestamp = self.pireps.items.last?.timestamp{
                     if(Int(Date().timeIntervalSince1970 * 1000) - lasttimestamp > self.MIN_PIREP_INTERVAL){
                         self.view.backgroundColor = UIColor.black
                     }
@@ -92,9 +99,9 @@ class StartViewController: UIViewController, CLLocationManagerDelegate{
     // CLLocationManagerDelegate method
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
-            if(self.pireps.count > 0) {
-                self.pireps[self.pireps.count - 1].geohash = location.coordinate.geohash(length:5)
-                self.pireps[self.pireps.count - 1].altitude = Int(location.altitude*3.28084) //convert to ft
+            if(self.pireps.items.count > 0) {
+                self.pireps.items[self.pireps.items.count - 1].geohash = location.coordinate.geohash(length:5)
+                self.pireps.items[self.pireps.items.count - 1].altitude = Int(location.altitude*3.28084) //convert to ft
             }
         }
     }
@@ -137,7 +144,7 @@ class StartViewController: UIViewController, CLLocationManagerDelegate{
             aircraftlabel.text = "Select Aircraft"
             aircraftlabel.textColor = UIColor.black
             aircraft_button.isHidden = false
-            print(self.pireps)
+            self.sendPIREPs()
         }
     }
     
@@ -157,27 +164,108 @@ class StartViewController: UIViewController, CLLocationManagerDelegate{
     
     func updatePIREP(severity: Int) {
         let currenttime = Int(Date().timeIntervalSince1970 * 1000)
-        if(self.pireps.count > 0) {
-            if(currenttime - self.pireps[self.pireps.count - 1].timestamp > self.MIN_PIREP_INTERVAL){
+        if(self.pireps.items.count > 0) {
+            if(currenttime - self.pireps.items[self.pireps.items.count - 1].timestamp > self.MIN_PIREP_INTERVAL){
                 print("Creating new PIREP")
-                self.pireps.append(PIREP(severity: severity, timestamp: currenttime, geohash: "", altitude: 0))
-            } else if(severity > self.pireps[self.pireps.count - 1].severity){
+                self.pireps.items.append(PIREP(
+                    report_id: UInt64(currenttime * 100) + UInt64(getHashedUUID()),
+                    aircraft: self.aircraft,
+                    severity: severity,
+                    timestamp: currenttime,
+                    geohash: "",
+                    altitude: 0
+                ))
+            } else if(severity > self.pireps.items[self.pireps.items.count - 1].severity){
                 print("Upgrading PIREP")
-                self.pireps[self.pireps.count - 1].severity = severity
+                self.pireps.items[self.pireps.items.count - 1].severity = severity
             }
         } else {
             print("Creating new PIREP")
-            self.pireps.append(PIREP(severity: severity, timestamp: currenttime, geohash: "", altitude: 0))
+            self.pireps.items.append(PIREP(
+                report_id: UInt64(currenttime * 100) + UInt64(getHashedUUID()),
+                aircraft: self.aircraft,
+                severity: severity,
+                timestamp: currenttime,
+                geohash: "",
+                altitude: 0
+            ))
         }
         
         locationManager.requestLocation()
         
-        switch (self.pireps[self.pireps.count - 1].severity){
+        switch (self.pireps.items[self.pireps.items.count - 1].severity){
         case 1: self.view.backgroundColor = UIColor(red: 0.0, green: 0.2, blue: 0.0, alpha: 1.0)
         case 3: self.view.backgroundColor = UIColor(red: 0.15, green: 0.15, blue: 0.0, alpha: 1.0)
         case 5: self.view.backgroundColor = UIColor(red: 0.2, green: 0.0, blue: 0.0, alpha: 1.0)
         default: self.view.backgroundColor = UIColor.black
         }
+    }
+
+    func getHashedUUID() -> Int {
+        if let uuidString = UIDevice.current.identifierForVendor?.uuidString {
+            let data = Data(uuidString.utf8)
+            var hash = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
+            _ = hash.withUnsafeMutableBytes { hashBytes in
+                data.withUnsafeBytes { dataBytes in
+                    CC_SHA256(dataBytes.baseAddress, CC_LONG(data.count), hashBytes.bindMemory(to: UInt8.self).baseAddress)
+                }
+            }
+            var hashValue: Int = 0
+            hash.withUnsafeBytes {
+                hashValue = $0.load(as: Int.self)
+            }
+            return abs(hashValue) % 100
+        } else {
+            print("Failed to get UUID")
+            return -1
+        }
+    }
+    
+    func sendPIREPs() {
+        // Define the URL
+        guard let url = URL(string: "https://zohmomjv73.execute-api.us-east-1.amazonaws.com/prod/report") else { return }
+        
+        // Create the URLRequest object
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Create the JSON data to send in the request body
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        do {
+            let encodePIREP = try jsonEncoder.encode(self.pireps)
+            let endcodeStringPIREPS = String(data: encodePIREP, encoding: .utf8)!
+            print(endcodeStringPIREPS)
+            // Assign the JSON data to the request body
+            request.httpBody = encodePIREP
+            
+            // Create a URLSession data task
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                // Handle errors
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
+
+                // Handle the response
+                if let data = data, let response = response as? HTTPURLResponse {
+                    print("Response Code: \(response.statusCode)")
+
+                    // Parse the response data if needed
+                    if let responseData = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        print("Response Data: \(responseData)")
+                    }
+                }
+            }
+
+            // Start the data task
+            task.resume()
+        } catch {
+            print(error.localizedDescription)
+        }
+
     }
     
 }
