@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lCQ-3E-ywN">
-                                <rect key="frame" x="60" y="418" width="200" height="50"/>
+                                <rect key="frame" x="60" y="488" width="200" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2gY-yp-ISi"/>
                                     <constraint firstAttribute="width" constant="200" id="d7a-9f-9P7"/>
@@ -33,13 +33,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Aircraft:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bbc-EP-7lh">
-                                <rect key="frame" x="90" y="76" width="140" height="27"/>
+                                <rect key="frame" x="90" y="146" width="140" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XzL-xZ-JRM">
-                                <rect key="frame" x="60" y="133" width="200" height="35"/>
+                                <rect key="frame" x="60" y="203" width="200" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="XzO-ts-t7a"/>
                                     <constraint firstAttribute="height" constant="35" id="iul-Ot-pcb"/>
@@ -58,7 +58,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="XzL-xZ-JRM" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2dm-qO-g79"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lCQ-3E-ywN" secondAttribute="bottom" constant="100" id="CXF-G4-zi1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="lCQ-3E-ywN" secondAttribute="bottom" constant="30" id="CXF-G4-zi1"/>
                             <constraint firstItem="lCQ-3E-ywN" firstAttribute="top" secondItem="XzL-xZ-JRM" secondAttribute="bottom" constant="250" id="X72-0u-SuG"/>
                             <constraint firstItem="Bbc-EP-7lh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="b0e-9J-rjr"/>
                             <constraint firstItem="lCQ-3E-ywN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="d5N-33-kFr"/>
