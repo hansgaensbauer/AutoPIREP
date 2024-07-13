@@ -225,7 +225,8 @@ map.on('zoomend', function () {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    queryEvents("d", 0, 6000);
+    const start = Date.now();
+    queryEvents("d", start - (24*60*60*1000), start);
     var layerControl = L.control.layers(null, overlayMaps).addTo(map);
 });
 
@@ -321,6 +322,14 @@ function queryEvents(geohash, startTime, endTime) {
 
 }
 
+function timestampToZulu(timestamp){
+    let date = new Date(parseInt(timestamp));
+    let hours = date.getUTCHours();
+    console.log(date);
+    let minutes = date.getUTCMinutes();
+    return(String(hours).padStart(2, '0') + String(minutes).padStart(2, '0') + "Z")
+}
+
 function addPointsToMap() {
     points.forEach(point => {
         
@@ -329,15 +338,15 @@ function addPointsToMap() {
         switch(point.severity.N){
             case "1": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker'}); 
-                marker.bindPopup("UA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "3": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker'}); 
-                marker.bindPopup("UA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "5": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_severe_small, className: 'report_marker'}); 
-                marker.bindPopup("UUA /TM " + point.timestamp.N + "Z/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UUA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             default:
                 console.log("default");
