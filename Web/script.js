@@ -332,8 +332,10 @@ function timestampToZulu(timestamp){
 
 function addPointsToMap() {
     points.forEach(point => {
-        
-        var latlng = Geohash.decode(point.geohash.S);
+	var geohash = base32.charAt(~~(Math.random() * 32))
+	console.log(geohash)
+        var latlng = Geohash.decode(point.geohash.S + geohash);
+	
         var marker = L.marker([latlng.lat, latlng.lon], { icon: pirep_severe });
         switch(point.severity.N){
             case "1": 
