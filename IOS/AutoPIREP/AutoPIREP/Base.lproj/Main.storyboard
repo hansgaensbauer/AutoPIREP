@@ -21,7 +21,7 @@
                                 <rect key="frame" x="60" y="488" width="200" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2gY-yp-ISi"/>
-                                    <constraint firstAttribute="width" constant="200" id="d7a-9f-9P7"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="d7a-9f-9P7"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Start Flight">
@@ -41,7 +41,7 @@
                             <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XzL-xZ-JRM">
                                 <rect key="frame" x="60" y="203" width="200" height="35"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="XzO-ts-t7a"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="XzO-ts-t7a"/>
                                     <constraint firstAttribute="height" constant="35" id="iul-Ot-pcb"/>
                                 </constraints>
                                 <menu key="menu" id="9aQ-Ju-erW">
