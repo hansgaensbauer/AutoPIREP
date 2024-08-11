@@ -1,7 +1,8 @@
 body, html {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
+    font-family: "Julius Sans One", sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
 
   #map {
@@ -39,4 +40,34 @@ body, html {
 
 #show-all-button:hover{
   background-color:#f4f4f4;
+}
+
+#privacy{
+  max-width: 1200px;
+  width:90%;
+  margin:auto;
+  background-color:white;
+  position:relative;
+  padding:30px;
+}
+
+#privacy-background{
+  background-color:rgb(233, 233, 233);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#privacy-link{
+  position: fixed;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  line-height: 16.8px;
+  font-size:12px;
+  padding:0px 5px;
+  right: 0;
+  bottom: 16.8px;
+  background-color:rgba(255, 255, 255, 0.8);
+  z-index: 10000;
 }

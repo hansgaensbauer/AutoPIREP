@@ -283,7 +283,7 @@ function queryEvents(geohash, startTime, endTime) {
     var body = JSON.stringify(body_json);
     xhr.send(body);
     console.log(body);
-    var response = JSON.parse(xhr.response);
+    var response = JSON.parse(xhr.response); 
     if(response.Count > 0){
         points = points.concat(response["Items"]);
     }
@@ -338,7 +338,7 @@ function addPointsToMap() {
         switch(point.severity.N){
             case "1": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker'}); 
-                marker.bindPopup("UA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
+                marker.bindPopup("UA /TM. " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "3": 
                 marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker'}); 
