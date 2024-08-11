@@ -215,10 +215,10 @@ map.on('zoomend', function () {
             element.style.visibility = "hidden";
         }
     }
-    if(zoomLevel == 5 && lastzoomLevel == 6){
+    if(zoomLevel <= 6){//zoomLevel == 5 && lastzoomLevel == 6){
         setSmallSymbols(true);
     }
-    if(zoomLevel == 6 && lastzoomLevel == 5){
+    if(zoomLevel > 6){//} && lastzoomLevel == 5){
         setSmallSymbols(false);
     }
     lastzoomLevel = zoomLevel;
