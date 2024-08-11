@@ -339,15 +339,15 @@ function addPointsToMap() {
         var marker = L.marker([latlng.lat, latlng.lon], { icon: pirep_severe });
         switch(point.severity.N){
             case "1": 
-                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_light_small, className: 'report_marker', zIndexOffset: 0}); 
                 marker.bindPopup("UA /TM. " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "3": 
-                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_moderate_small, className: 'report_marker', zIndexOffset: 400}); 
                 marker.bindPopup("UA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             case "5": 
-                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_severe_small, className: 'report_marker'}); 
+                marker = L.marker([latlng.lat, latlng.lon], {icon: pirep_severe_small, className: 'report_marker', zIndexOffset: 800}); 
                 marker.bindPopup("UUA /TM " + timestampToZulu(point.timestamp.N) + "/FL " + point.altitude.N + "/TP " + point.aircraft.S);
                 break;
             default:
