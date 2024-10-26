@@ -3,3 +3,4 @@ AutoPIREP is a website, backend, and IOS app for automatically reporting turbule
 
 <img src="https://raw.githubusercontent.com/hansgaensbauer/AutoPIREP/refs/heads/main/AutoPIREP_Web.png" width="600">
 <img src="https://github.com/hansgaensbauer/AutoPIREP/blob/main/screenshot_pirep_severe.PNG?raw=true" width="200">
+<img src="https://github.com/hansgaensbauer/AutoPIREP/blob/main/screenshot_select_aircraft.PNG?raw=true" width="200">
